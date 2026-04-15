@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.mp4
+.cursor/
+.cursorrules
+.DS_Store
+public/assets/hero-sequence/
