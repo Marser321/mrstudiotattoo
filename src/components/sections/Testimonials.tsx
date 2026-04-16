@@ -53,22 +53,20 @@ export function Testimonials() {
   useGSAP(() => {
     if (!containerRef.current) return;
     gsap.fromTo(containerRef.current,
-      { opacity: 0, y: 40 },
+      { opacity: 0, y: 50 },
       {
         opacity: 1,
         y: 0,
-        duration: 1,
         ease: 'power2.out',
         scrollTrigger: {
           trigger: containerRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
+          start: 'top 95%',
+          end: 'top 65%',
+          scrub: 1,
         },
       }
     );
   }, { scope: containerRef });
-
-  const current = testimonials[activeIndex];
 
   return (
     <section ref={containerRef} className="relative w-full py-32 px-4 md:px-16 lg:px-32 overflow-hidden">

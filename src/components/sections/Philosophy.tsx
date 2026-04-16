@@ -13,6 +13,22 @@ export function Philosophy() {
   useGSAP(() => {
     if (!containerRef.current || !lineRef.current) return;
 
+    // Smooth section entrance
+    gsap.fromTo(containerRef.current,
+      { opacity: 0, y: 60 },
+      {
+        opacity: 1,
+        y: 0,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 95%',
+          end: 'top 60%',
+          scrub: 1,
+        }
+      }
+    );
+
     // Line drawing animation
     gsap.fromTo(lineRef.current,
       { scaleY: 0 },
@@ -36,18 +52,18 @@ export function Philosophy() {
       gsap.fromTo(item,
         { 
           opacity: 0, 
-          x: isLeft ? -100 : 100, 
-          scale: 0.9 
+          x: isLeft ? -60 : 60, 
+          y: 30,
         },
         {
           opacity: 1,
           x: 0,
-          scale: 1,
-          duration: 1,
-          ease: "back.out(1.7)",
+          y: 0,
+          duration: 1.2,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: item,
-            start: "top 80%",
+            start: "top 85%",
             toggleActions: "play none none reverse"
           }
         }

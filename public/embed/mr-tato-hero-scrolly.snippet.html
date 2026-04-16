@@ -1,0 +1,67 @@
+<!-- 1) Include GSAP + ScrollTrigger -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<!-- 2) Include this section styles -->
+<link rel="stylesheet" href="/embed/mr-tato-hero-scrolly.css" />
+
+<!-- 3) Minimal host container -->
+<section id="mr-tato-hero-scrolly"></section>
+
+<!-- 4) Include section script -->
+<script src="/embed/mr-tato-hero-scrolly.js"></script>
+
+<!-- 5) Initialize -->
+<script>
+  window.initMrTatoHeroScrolly({
+    rootSelector: "#mr-tato-hero-scrolly",
+    layoutSplit: "60/40",
+    cardFlow: "horizontal-track",
+    frameCount: 150,
+    framePathPattern: "/assets/hero-sequence-v2/frame_{index}.webp",
+    bgFrameCount: 150,
+    bgFramePathPattern: "/assets/rose-sequence-v1/frame_{index}.webp",
+    pinDistanceVh: 320,
+    scrub: 1,
+    roseRevealStart: 0.0,
+    roseRevealEnd: 0.35,
+    roseMaxOpacity: 0.92,
+    machineFeatherStrength: 0.08,
+    cardsRevealStart: 0.18,
+    cardsRevealEnd: 1.0,
+    visualScale: 0.89,
+    visualOffsetX: 0.02,
+    bgScale: 0.9,
+    bgOffsetX: -0.08,
+    title: "Precision in Motion",
+    ctaLabel: "Book Your Session",
+    ctaHref: "#contact",
+    cards: [
+      {
+        id: "concept",
+        eyebrow: "Concepto",
+        title: "Diseño Con Intención",
+        body: "Cada pieza nace con dirección visual clara para que la narrativa avance junto al scroll.",
+        ctaLabel: "Ver Proceso",
+        ctaHref: "#process",
+      },
+      {
+        id: "craft",
+        eyebrow: "Técnica",
+        title: "Precisión de Línea",
+        body: "El detalle fino y la composición anatómica se trabajan para que el resultado luzca limpio y atemporal.",
+        ctaLabel: "Explorar Portafolio",
+        ctaHref: "#portfolio",
+      },
+      {
+        id: "book",
+        eyebrow: "Reserva",
+        title: "Agenda Tu Sesión",
+        body: "Definimos idea, tamaño y estilo en una consulta guiada para aterrizar una pieza única.",
+        ctaLabel: "Reservar Ahora",
+        ctaHref: "#contact",
+      },
+    ],
+    // logoSrc: "/assets/logo.svg",
+  });
+</script>

@@ -20,15 +20,32 @@ export function Portfolio() {
   useGSAP(() => {
     if (!containerRef.current) return;
 
+    // Smooth section entrance
+    gsap.fromTo(containerRef.current,
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 95%',
+          end: 'top 65%',
+          scrub: 1,
+        }
+      }
+    );
+
     itemsRef.current.forEach((el, i) => {
       if (!el) return;
       gsap.fromTo(el,
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 40, scale: 0.95 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          delay: i * 0.15,
+          scale: 1,
+          duration: 0.9,
+          delay: i * 0.1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: el,

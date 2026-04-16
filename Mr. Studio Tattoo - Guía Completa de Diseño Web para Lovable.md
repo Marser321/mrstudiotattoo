@@ -1,4 +1,4 @@
-# Mr. Studio Tattoo - Guía Completa de Diseño Web para Lovable
+ Mr. Studio Tattoo - Guía Completa de Diseño Web para Lovable
 
 ## 📋 Índice
 1. [Resumen Ejecutivo](#resumen-ejecutivo)

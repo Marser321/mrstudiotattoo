@@ -33,10 +33,26 @@ export function Artists() {
   useGSAP(() => {
     if (!containerRef.current) return;
 
+    // Smooth section entrance
+    gsap.fromTo(containerRef.current,
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 95%',
+          end: 'top 65%',
+          scrub: 1,
+        }
+      }
+    );
+
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
       gsap.fromTo(card,
-        { opacity: 0, y: 80, rotateY: i === 0 ? -5 : 5 },
+        { opacity: 0, y: 60, rotateY: i === 0 ? -3 : 3 },
         {
           opacity: 1,
           y: 0,
