@@ -1,50 +1,47 @@
-# PROMPT: Página de Reservas Premium (GHL + Supabase)
+# PROMPT: Página de Reservas "Noir" (GHL + Supabase)
 
 ## OBJETIVO
-Integrar una página de reservas de alta fidelidad, con estética "Noir" (lujo silencioso, modo oscuro radical, acentos rojos) que esté plenamente funcional con GoHighLevel mediante Supabase Edge Functions.
+Integrar una página de reservas de alta fidelidad con estética "Noir Legacy" (Lujo Silencioso, Modo Oscuro Radical, Acentos Rojos). Esta página está plenamente integrada con GoHighLevel mediante Supabase Edge Functions.
 
 ## Ficheros Fuente (GitHub)
-Los assets y la lógica se encuentran en: `https://github.com/Marser321/actmrtato`
-- Componente Base: `/lovable-export/MrTatoBookingPremium.tsx`
+Los assets y la lógica aislada se encuentran en: `https://github.com/Marser321/actmrtato`
+- Componente Standalone: `/lovable-export/MrTatoBookingPremium.tsx`
 
 ---
 
 ## INSTRUCCIONES PARA LOVABLE
 
-### PASO 1: Configuración de Entorno
-Asegúrate de configurar los secretos en Lovable (Settings > Secrets):
-- `VITE_SUPABASE_URL`: Tu URL de Supabase Project.
+### PASO 1: Configuración de Secretos (Secrets)
+Configura las siguientes variables en Lovable (Settings > Secrets):
+- `VITE_SUPABASE_URL`: Tu URL del proyecto de Supabase.
 - `VITE_SUPABASE_ANON_KEY`: Tu Anon Key de Supabase.
 
 ### PASO 2: Instalación de Dependencias
-Ejecuta en la terminal de Lovable:
+Asegúrate de instalar los paquetes necesarios:
 ```bash
-npm install @supabase/supabase-js lucide-react sonner
+npm install @supabase/supabase-js lucide-react
 ```
 
-### PASO 3: Integración del Componente
-1. Crea un nuevo archivo en tu proyecto Lovable: `src/components/booking/MrTatoBookingPremium.tsx`.
-2. Copia el contenido del archivo `/lovable-export/MrTatoBookingPremium.tsx` del repositorio `https://github.com/Marser321/actmrtato`.
-3. Este componente es **standalone**, incluye su propia lógica de servicio para conectar con Supabase.
+### PASO 3: Integración del Componente Aislado
+1. Crea un nuevo componente en `src/components/booking/MrTatoBookingPremium.tsx`.
+2. Copia el contenido ÍNTEGRO de `/lovable-export/MrTatoBookingPremium.tsx` del repositorio de GitHub.
+3. Este archivo es **autocontenido**: incluye el cliente de Supabase, los wrappers de servicios de GHL y todos los estilos necesarios.
 
-### PASO 4: Conectores de Backend (Edge Functions)
-El componente espera que las siguientes funciones existan en tu Supabase:
-- `capture-ghl-lead`: Crea el contacto en GHL y devuelve el `contactId`.
-- `get-ghl-slots`: Obtiene los huecos libres para un `calendarId` específico.
-- `create-ghl-appointment`: Confirma la cita en la agenda de GHL.
+### PASO 4: Asegurar la Conectividad de Backend
+El componente invocará las siguientes funciones en tu Supabase:
+- `capture-ghl-lead`: Crea el contacto y devuelve `contactId`.
+- `get-ghl-slots`: Consulta disponibilidad para un `calendarId` y rango de fechas.
+- `create-ghl-appointment`: Reserva la cita final en la agenda de GHL.
 
 ---
 
-## ESTÉTICA APLICADA (Noir Legacy)
-- **Fondo**: `#000000` puro.
-- **Tipografía**: Serif (Playfair Display o similar) para títulos, Sans (Inter) para UI.
-- **Colores**: Acento rojo sangre (`#dc2626`) para estados activos y botones destacados.
-- **Interacción**: 
-  - Paso 1 (Identidad) bloquea el resto del formulario hasta que se valida el contacto.
-  - Efectos de blur y glassmorphism en el panel de calendario.
-  - Micro-animaciones de entrada (`fade-in`, `slide-up`).
+## FILOSOFÍA DE DISEÑO (Noir Aesthetic)
+- **Modo Oscuro Puro**: El fondo debe ser `#000000`.
+- **Tipografía**: Combinación de Serif elegante (Playfair Display / Inter Italic) y Sans minimalista (Inter).
+- **Acentos**: Rojo Sangre (`#dc2626`) para estados de éxito, errores y botones críticos.
+- **Glassmorphism**: Efectos de desenfoque de fondo (`backdrop-blur-3xl`) en paneles laterales.
 
-## REGLAS CRÍTICAS
-1. No usar iFrames. Todo el flujo es nativo y asíncrono.
-2. Mantener el sistema de "Validación de Identidad" antes de mostrar la agenda.
-3. Asegurar que los IDs de calendario en el array `artists` coincidan con los de tu subcuenta de GoHighLevel.
+## REGLAS DE NEGOCIO
+- **Barrera de Identidad**: No se muestra la agenda hasta que el cliente valida su nombre, email y teléfono.
+- **Validación Automática**: El botón de validación se activa solo cuando los datos tienen un formato válido.
+- **IDs de Calendario**: Asegúrate de que los IDs en la constante `artists` dentro del componente coincidan con tus calendarios reales de GoHighLevel.
