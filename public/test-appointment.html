@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr Tato – Citas (Tattoo Art)</title>
+  <style>body, html { margin: 0; padding: 0; background: #050505; }</style>
+  <link rel="stylesheet" href="/embed/mr-tato-appointment.css" />
+</head>
+<body>
+
+  <div id="mr-tato-appointment-embed"></div>
+
+  <script src="/embed/mr-tato-appointment.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof window.initMrTatoAppointment !== "function") return;
+
+      window.initMrTatoAppointment({
+        rootSelector: "#mr-tato-appointment-embed",
+        ghlCalendarUrl: "https://api.leadconnectorhq.com/widget/booking/D7hC33lE3BixqYv5E",
+        title: "Reserva tu sesión",
+        subtitle: "Estás a un paso de vivir la experiencia Mr Tato.",
+
+        /* Tattoo art images — these are sketch/blackwork style from Unsplash for demo.
+           Replace with your actual files (e.g. /assets/tattoo-art/ojo.jpg) */
+        artImages: [
+          "https://images.unsplash.com/photo-1568515045052-f9a854d70bfd?w=600&q=80",
+          "https://images.unsplash.com/photo-1590246815117-0b9323d068c4?w=600&q=80",
+          "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=600&q=80",
+          "https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=600&q=80"
+        ],
+
+        displayDuration: 6,   // seconds visible (faster for demo)
+        fadeDuration: 3        // seconds crossfade
+      });
+    });
+  </script>
+</body>
+</html>

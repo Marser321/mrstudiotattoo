@@ -1,0 +1,205 @@
+/* =========================================================================
+   MR TATO – APPOINTMENT EMBED  (Tattoo Art Borders)
+   ========================================================================= */
+
+/* ── Reset ─────────────────────────────────────────────────────────────── */
+.msta-host {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: #050505;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #fff;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.msta-host *, .msta-host *::before, .msta-host *::after { box-sizing: inherit; }
+
+/* ── Art Panels (left / right) ─────────────────────────────────────────── */
+.msta-art-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 32vw;
+  min-width: 220px;
+  max-width: 420px;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.msta-art-panel.-left  { left: 0; }
+.msta-art-panel.-right { right: 0; }
+
+/* Each image sits absolute inside the panel */
+.msta-art-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90%;
+  max-height: 85vh;
+  object-fit: contain;
+
+  /* --- The key visual treatment --- */
+  /* Multiply removes white paper and keeps the black linework on dark bg */
+  mix-blend-mode: multiply;
+  /* Then invert so black ink becomes bright white/silver */
+  filter: invert(1) brightness(1.6) contrast(1.1);
+
+  opacity: 0;
+  transition: opacity 3s ease;
+}
+
+.msta-art-img.-visible {
+  opacity: 0.35;
+}
+
+/* Soft edge fade so images blend into the page edges */
+.msta-art-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.msta-art-panel.-left::after {
+  background: linear-gradient(to right, transparent 0%, transparent 50%, #050505 100%);
+}
+.msta-art-panel.-right::after {
+  background: linear-gradient(to left, transparent 0%, transparent 50%, #050505 100%);
+}
+
+/* Very subtle top/bottom vignette on panels */
+.msta-art-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    #050505 0%, transparent 20%, transparent 80%, #050505 100%);
+}
+
+/* ── Center Content ────────────────────────────────────────────────────── */
+.msta-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 4rem 1.5rem;
+}
+
+/* Header */
+.msta-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: mstaFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(24px);
+}
+.msta-header h1 {
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ffffff 0%, #999999 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.msta-header p {
+  color: #999;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  font-weight: 400;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Glass Calendar Container ──────────────────────────────────────────── */
+.msta-glass {
+  width: 100%;
+  max-width: 800px;
+  background: rgba(12, 12, 12, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 0 60px rgba(0,0,0,0.7),
+    0 0 120px rgba(0,50,120,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: mstaFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+}
+
+/* Subtle blue accent line on top (studio neon vibe) */
+.msta-glass::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 10%, rgba(0,100,255,0.45) 50%, transparent 90%);
+  z-index: 12;
+}
+
+.msta-glass iframe {
+  width: 100%;
+  height: 800px;
+  border: none;
+  display: block;
+  background: transparent;
+}
+
+/* ── Loader ────────────────────────────────────────────────────────────── */
+.msta-loader {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 11;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.msta-loader.-hidden { opacity: 0; }
+
+.msta-spinner {
+  width: 36px; height: 36px;
+  border: 2.5px solid rgba(255,255,255,0.08);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: mstaSpin 0.9s linear infinite;
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
+@keyframes mstaFadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes mstaSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .msta-art-panel { width: 28vw; min-width: 150px; }
+  .msta-art-img.-visible { opacity: 0.2; }
+}
+@media (max-width: 640px) {
+  .msta-art-panel { display: none; } /* hide on small phones to keep it clean */
+  .msta-content { padding: 2rem 1rem; }
+  .msta-glass iframe { height: 650px; }
+}

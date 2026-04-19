@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Calendar, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Calendar, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
+import { ghlService } from '../../services/ghlService';
+import { toast } from 'sonner';
 
-// Mock Data
+// Standard Artist Configuration
 const artists = [
-  { id: 'usr_rielo_123', name: 'Reinier Rielo', specialty: 'Realismo', img: '/assets/images/tattoo_artist_1776269987044.png' },
-  { id: 'usr_tony_456', name: 'Tony', specialty: 'Geométrico', img: '/assets/images/tattoo_portfolio_3_1776269971624.png' },
+  { 
+    id: 'D7hC33lE3BixqYv5E', // Real GHL Calendar ID from test snippet
+    name: 'Reinier Rielo', 
+    specialty: 'Realismo', 
+    img: '/assets/images/tattoo_artist_1776269987044.png' 
+  },
+  { 
+    id: 'TONY_CALENDAR_ID', // Placeholder for Tony
+    name: 'Tony', 
+    specialty: 'Geométrico', 
+    img: '/assets/images/tattoo_portfolio_3_1776269971624.png' 
+  },
 ];
 
 const sizes = [
@@ -13,18 +25,12 @@ const sizes = [
   { id: 'large', label: 'Grande', duration: '4h+', description: 'Sesiones completas' },
 ];
 
-const mockSlots: Record<string, string[]> = {
-  '2026-05-15': ['10:00 AM', '02:30 PM'],
-  '2026-05-16': ['11:00 AM'],
-  '2026-05-18': ['10:00 AM', '12:00 PM', '04:00 PM'],
-};
-
 export function BookingForm() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    artistId: '',
+    artistId: artists[0].id, // Default to first artist
     sizeId: '',
     date: '',
     time: '',
@@ -35,7 +41,9 @@ export function BookingForm() {
   const [isCapturing, setIsCapturing] = useState(false);
   const [isContactValid, setIsContactValid] = useState(false);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [availableSlots, setAvailableSlots] = useState<Record<string, string[]>>({});
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Validate contact info to "unlock" the capture button
   useEffect(() => {
@@ -45,23 +53,29 @@ export function BookingForm() {
     setIsContactValid(isValid);
   }, [formData.name, formData.email, formData.phone]);
 
-  // Lead Capture Function (Simulated if Config is missing)
+  // Lead Capture Function (Real Integration)
   const handleCaptureLead = useCallback(async () => {
     if (!isContactValid || isIdentityCaptured || isCapturing) return;
 
     setIsCapturing(true);
-    console.log("Capturing Lead in GHL Proxy...", formData);
-
     try {
-      // Note: This matches the 'capture-ghl-lead' Supabase Edge Function logic
-      // In production, you would use: supabase.functions.invoke('capture-ghl-lead', { ... })
-      setTimeout(() => {
-        setContactId('ghl_contact_' + Math.random().toString(36).substr(2, 9));
+      const result = await ghlService.captureLead({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone
+      });
+      
+      if (result?.contactId) {
+        setContactId(result.contactId);
         setIsIdentityCaptured(true);
-        setIsCapturing(false);
-      }, 1500);
+        toast.success("Identidad verificada correctamente.");
+      } else {
+        throw new Error("No se recibió un Contact ID");
+      }
     } catch (err) {
       console.error("Lead capture failed:", err);
+      toast.error("Error al validar identidad. Por favor intenta de nuevo.");
+    } finally {
       setIsCapturing(false);
     }
   }, [formData, isContactValid, isIdentityCaptured, isCapturing]);
@@ -70,15 +84,67 @@ export function BookingForm() {
   const inputClasses = "w-full bg-black/40 border border-white/10 rounded-sm p-4 text-sm font-sans focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-all placeholder:text-white/20";
   const labelClasses = "font-sans text-[10px] tracking-[0.2em] uppercase text-white/40 mb-2 block";
   
-  const handleDateChange = (date: string) => {
+  const handleDateChange = async (date: string) => {
+    if (!formData.artistId) {
+      toast.error("Selecciona un artista primero");
+      return;
+    }
+
     setLoadingSlots(true);
     setFormData(prev => ({ ...prev, date, time: '' }));
-    setTimeout(() => setLoadingSlots(false), 800);
+    
+    try {
+      // Calculate start and end date for the selected day
+      const startDate = new Date(date).getTime().toString();
+      const endDate = (new Date(date).getTime() + 86400000).toString();
+      
+      const slots = await ghlService.getSlots(formData.artistId, startDate, endDate);
+      
+      // Transform ISO slots to time strings for display
+      const formattedSlots = slots.map((s: string) => {
+        const d = new Date(s);
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+      });
+
+      setAvailableSlots(prev => ({ ...prev, [date]: formattedSlots }));
+    } catch (err) {
+      console.error("Failed to fetch slots:", err);
+      toast.error("Error al obtener horarios disponibles.");
+    } finally {
+      setLoadingSlots(false);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSuccess(true);
+    if (!contactId || !formData.date || !formData.time) return;
+
+    setIsSubmitting(true);
+    try {
+      // Construct startTime in ISO format
+      const [hour, minuteSegment] = formData.time.split(':');
+      const [minute, ampm] = minuteSegment.split(' ');
+      let h = parseInt(hour);
+      if (ampm === 'PM' && h < 12) h += 12;
+      if (ampm === 'AM' && h === 12) h = 0;
+      
+      const sessionDate = new Date(formData.date);
+      sessionDate.setHours(h, parseInt(minute), 0, 0);
+
+      await ghlService.createAppointment({
+        contactId,
+        calendarId: formData.artistId,
+        startTime: sessionDate.toISOString(),
+      });
+
+      setIsSuccess(true);
+      toast.success("¡Cita confirmada!");
+    } catch (err) {
+      console.error("Booking failed:", err);
+      toast.error("Error al confirmar la cita. Por favor intenta de nuevo.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSuccess) {
@@ -87,9 +153,9 @@ export function BookingForm() {
         <div className="w-20 h-20 bg-red-600/10 rounded-full flex items-center justify-center border border-red-600/20 mb-8">
           <CheckCircle2 className="w-10 h-10 text-red-600" />
         </div>
-        <h2 className="font-serif text-4xl mb-4 text-white">Cita Reservada</h2>
-        <p className="font-sans text-sm text-white/60 max-w-sm mb-8 leading-relaxed">
-          Tu sesión para {formData.date} a las {formData.time} ha sido procesada. Recibirás un SMS de confirmación en breve.
+        <h2 className="font-serif text-4xl mb-4 text-white uppercase tracking-tighter">Cita Reservada</h2>
+        <p className="font-sans text-sm text-white/60 max-w-sm mb-8 leading-relaxed uppercase tracking-widest text-[10px]">
+          Tu sesión para {formData.date} a las {formData.time} ha sido procesada con éxito.
         </p>
         <button 
           onClick={() => window.location.href = '/'}
@@ -156,7 +222,7 @@ export function BookingForm() {
                 className="w-full py-4 bg-white text-black font-sans text-[10px] tracking-[0.3em] uppercase transition-all hover:bg-red-600 hover:text-white disabled:opacity-20 flex items-center justify-center gap-3 rounded-sm group overflow-hidden relative"
               >
                 {isCapturing ? (
-                  <span className="animate-pulse">Capturando...</span>
+                  <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
                     <span>Validar Identidad y Continuar</span>
@@ -167,8 +233,8 @@ export function BookingForm() {
               <p className="mt-4 font-sans text-[9px] text-white/20 uppercase tracking-tighter text-center">Iniciaremos tu ficha de cliente para asegurar el seguimiento de tu sesión.</p>
             </div>
           ) : (
-            <div className="mt-8 flex items-center gap-3 text-red-600 bg-red-600/5 p-4 rounded-sm border border-red-600/20 animate-in fade-in slide-in-from-left-4 duration-700">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="mt-8 flex items-center gap-3 text-white bg-white/5 p-4 rounded-sm border border-white/10 animate-in fade-in slide-in-from-left-4 duration-700">
+              <CheckCircle2 className="w-4 h-4 text-red-600" />
               <p className="font-sans text-[10px] tracking-[0.3em] uppercase">Identidad Verificada — Cliente: {contactId?.slice(-6).toUpperCase()}</p>
             </div>
           )}
@@ -263,20 +329,20 @@ export function BookingForm() {
               ))}
               {Array.from({length: 31}).map((_, i) => {
                 const day = i + 1;
-                const dateKey = `2026-05-${day.toString().padStart(2, '0')}`;
-                const hasSlots = mockSlots[dateKey];
+                const d = new Date();
+                const month = (d.getMonth() + 1).toString().padStart(2, '0');
+                const year = d.getFullYear();
+                const dateKey = `${year}-${month}-${day.toString().padStart(2, '0')}`;
                 const isSelected = formData.date === dateKey;
 
                 return (
                   <button
                     key={i}
                     type="button"
-                    disabled={!hasSlots}
                     onClick={() => handleDateChange(dateKey)}
                     className={`aspect-square text-[11px] font-sans flex items-center justify-center rounded-sm transition-all duration-300 ${
                       isSelected ? 'bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.4)]' : 
-                      hasSlots ? 'text-white/80 hover:bg-white/10 border border-white/5' : 
-                      'text-white/5 pointer-events-none'
+                      'text-white/80 hover:bg-white/10 border border-white/5'
                     }`}
                   >
                     {day}
@@ -294,7 +360,7 @@ export function BookingForm() {
               </div>
             ) : formData.date ? (
               <div className="grid grid-cols-2 gap-3">
-                {mockSlots[formData.date]?.map(time => (
+                {availableSlots[formData.date]?.map(time => (
                   <button
                     key={time}
                     type="button"
@@ -307,7 +373,7 @@ export function BookingForm() {
                   >
                     {time}
                   </button>
-                )) || <p className="text-white/20 text-[10px] uppercase font-sans tracking-widest">Agenda Completa</p>}
+                )) || <p className="text-white/20 text-[10px] uppercase font-sans tracking-widest text-center py-4">No hay turnos para hoy</p>}
               </div>
             ) : (
               <p className="text-white/10 text-[10px] uppercase font-sans tracking-[0.3em] text-center py-10 border border-white/5 border-dashed rounded-sm">Selecciona una fecha</p>
@@ -327,14 +393,20 @@ export function BookingForm() {
             
             <button
               type="submit"
-              disabled={!formData.date || !formData.time || !formData.sizeId || !isIdentityCaptured}
+              disabled={!formData.date || !formData.time || !formData.sizeId || !isIdentityCaptured || isSubmitting}
               className="w-full py-5 bg-red-600 text-white font-sans text-[10px] tracking-[0.4em] uppercase transition-all duration-500 hover:bg-red-700 disabled:opacity-20 disabled:grayscale flex items-center justify-center gap-4 rounded-sm group overflow-hidden relative"
             >
               {/* Shimmer effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
               
-              <span className="relative z-10">Confirmar Cita Gratis</span>
-              <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform duration-500" />
+              {isSubmitting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <>
+                  <span className="relative z-10">Confirmar Cita Gratis</span>
+                  <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform duration-500" />
+                </>
+              )}
             </button>
             <p className="font-sans text-[8px] text-center text-white/10 uppercase tracking-[0.2em]">Al confirmar aceptas nuestras políticas de cancelación.</p>
           </div>

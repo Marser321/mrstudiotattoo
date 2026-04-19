@@ -1,0 +1,36 @@
+<!--
+  MR TATO STUDIO - APPOINTMENT EMBED
+  Instrucciones de integración para Lovable / Webflow / HTML
+  -----------------------------------------------------------
+  Asegúrate de agregar este fragmento en el elemento donde quieres que se muestre.
+-->
+
+<!-- 1. Contenedor Raíz -->
+<div id="mr-tato-appointment-embed"></div>
+
+<!-- 2. Importar los Estilos Base de Citas -->
+<link rel="stylesheet" href="/embed/mr-tato-appointment.css" />
+
+<!-- 3. Importar y Ejecutar el Script de Lógica -->
+<script src="/embed/mr-tato-appointment.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof window.initMrTatoAppointment === "function") {
+      window.initMrTatoAppointment({
+        rootSelector: "#mr-tato-appointment-embed",
+        ghlCalendarUrl: "https://api.leadconnectorhq.com/widget/booking/tu_id_de_calendario", // <-- [REEMPLAZA ESTO]
+        title: "Reserva tu sesión",
+        subtitle: "Estás a un paso de vivir la experiencia Mr Tato.",
+        
+        // Pasa las rutas de tus diseños de tinta negra / bocetos, tal cual los subiste (JPG o PNG)
+        organicImages: [
+          "/assets/studio/ojo-sangrando.jpg", 
+          "/assets/studio/arbol-calavera.jpg",
+          "/assets/studio/zorro-dotwork.jpg"
+        ],
+        
+        loopInterval: 12000 // Tiempo en milisegundos que dura el barrido completo de una imagen
+      });
+    }
+  });
+</script>
