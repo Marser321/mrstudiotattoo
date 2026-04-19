@@ -50,67 +50,44 @@
 }
 
 :root {
-  /* Brutalist Light Theme - Skin Base */
-  --background: #F4EBE1; /* Skin-like pale tone */
-  --foreground: #0A0A0A;
-  --card: #FFFFFF;
-  --card-foreground: #0A0A0A;
-  --popover: #FFFFFF;
-  --popover-foreground: #0A0A0A;
-  --primary: #DC2626; /* Aggressive Red */
-  --primary-foreground: #FFFFFF;
-  --secondary: #EADDCD;
-  --secondary-foreground: #0A0A0A;
-  --muted: #EADDCD;
-  --muted-foreground: rgba(10, 10, 10, 0.6);
-  --accent: #EADDCD;
-  --accent-foreground: #0A0A0A;
-  --destructive: #991B1B;
-  --border: rgba(10, 10, 10, 0.1);
-  --input: rgba(10, 10, 10, 0.1);
-  --ring: #0A0A0A;
-  
-  --radius: 0.5rem;
-  
-  --sidebar: #F4EBE1;
-  --sidebar-foreground: #0A0A0A;
-  --sidebar-primary: #DC2626;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #EADDCD;
-  --sidebar-accent-foreground: #0A0A0A;
-  --sidebar-border: rgba(10, 10, 10, 0.1);
-  --sidebar-ring: #0A0A0A;
-}
-
-.dark {
-  /* Brutalist Dark Theme - Pure Contrast */
+  /* High Contrast Noir Theme - Sterile & Aggressive */
   --background: #000000;
   --foreground: #FFFFFF;
   --card: #0A0A0A;
   --card-foreground: #FFFFFF;
-  --popover: #0A0A0A;
+  --popover: #000000;
   --popover-foreground: #FFFFFF;
-  --primary: #DC2626; /* Aggressive Red */
+  --primary: #DC2626; /* Studio Red */
   --primary-foreground: #FFFFFF;
-  --secondary: #1A1A1A;
+  --secondary: #0A0A0A;
   --secondary-foreground: #FFFFFF;
-  --muted: #1A1A1A;
-  --muted-foreground: rgba(255, 255, 255, 0.5);
-  --accent: #1A1A1A;
+  --muted: #0A0A0A;
+  --muted-foreground: rgba(255, 255, 255, 0.4);
+  --accent: #0A0A0A;
   --accent-foreground: #FFFFFF;
   --destructive: #991B1B;
-  --border: rgba(255, 255, 255, 0.15);
-  --input: rgba(255, 255, 255, 0.15);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.1);
   --ring: #FFFFFF;
+  
+  --radius: 2px; /* Aggressive small radius */
   
   --sidebar: #000000;
   --sidebar-foreground: #FFFFFF;
   --sidebar-primary: #DC2626;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #1F1F1F;
+  --sidebar-accent: #0A0A0A;
   --sidebar-accent-foreground: #FFFFFF;
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: #FFFFFF;
+}
+
+.dark {
+  /* Force Noir even in dark mode class */
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --card: #0A0A0A;
+  --border: rgba(255, 255, 255, 0.15);
 }
 
 @layer utilities {
@@ -131,14 +108,53 @@
   .magnetic-element:hover {
     transform: scale(1.05) translateY(-2px);
   }
+  
+  .static-grain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+  }
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  
+  /* Minimalist Scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(220, 38, 38, 0.2);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(220, 38, 38, 0.5);
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    overflow-x: hidden;
   }
   html {
     @apply font-sans scroll-smooth;

@@ -52,7 +52,7 @@ export const headerHeroConfig: HeaderHeroConfig = {
   eyebrow: "MR STUDIO TATO",
   title: "Precision in Motion",
   ctaLabel: "Book Your Session",
-  ctaHref: "#contact",
+  ctaHref: "/booking",
   logoSrc: "/assets/logo.svg",
   frameCount: 150,
   framePathPattern: "/assets/hero-sequence-v2/frame_{index}.webp",
@@ -81,7 +81,7 @@ export const headerHeroConfig: HeaderHeroConfig = {
       title: "Agenda Tu Sesión",
       body: "Definimos idea, tamaño y estilo en una consulta guiada para aterrizar una pieza única.",
       ctaLabel: "Reservar Ahora",
-      ctaHref: "#contact",
+      ctaHref: "/booking",
     },
   ],
   fonts: {

@@ -39,8 +39,8 @@ export function HeroScrollyEmbed() {
           machineFeatherStrength: 0.12,
           cardsRevealStart: 0.18,
           cardsRevealEnd: 1.0,
-          visualScale: 0.17,
-          visualOffsetX: 0.1,
+          visualScale: 0.45,
+          visualOffsetX: 0.30,
           bgScale: 0.9,
           bgOffsetX: -0.08,
           title: "Precision in Motion",
@@ -97,9 +97,9 @@ export function HeroScrollyEmbed() {
       }
     };
 
-    if (!document.querySelector('script[src="/embed/mr-tato-hero-scrolly.js"]')) {
+    if (!document.querySelector('script[src^="/embed/mr-tato-hero-scrolly.js"]')) {
       const script = document.createElement("script");
-      script.src = "/embed/mr-tato-hero-scrolly.js";
+      script.src = "/embed/mr-tato-hero-scrolly.js?v=" + Date.now();
       script.async = true;
       script.onload = initScrolly;
       document.body.appendChild(script);
