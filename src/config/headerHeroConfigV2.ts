@@ -17,6 +17,7 @@ export const headerHeroConfigV2: HeaderHeroConfig = {
       body: "Diseños delicados con líneas calculadas. Cada trazo es intencional, perfecto para minimalistas.",
       ctaLabel: "DESDE $100",
       ctaHref: "#",
+      imageSrc: "/assets/card-sketches/fineline.png",
     },
     {
       id: "realismo",
@@ -25,6 +26,7 @@ export const headerHeroConfigV2: HeaderHeroConfig = {
       body: "Retratos hiper-realistas en blanco y negro que capturan la esencia de tus momentos más queridos.",
       ctaLabel: "DESDE $300",
       ctaHref: "#",
+      imageSrc: "/assets/card-sketches/realismo.png",
     },
     {
       id: "geometrico",
@@ -33,6 +35,7 @@ export const headerHeroConfigV2: HeaderHeroConfig = {
       body: "Patrones geométricos y mandalas de precisión matemática que crean armonía visual única.",
       ctaLabel: "DESDE $150",
       ctaHref: "#",
+      imageSrc: "/assets/card-sketches/geometrico.png",
     },
     {
       id: "custom",
@@ -41,6 +44,7 @@ export const headerHeroConfigV2: HeaderHeroConfig = {
       body: "Diseños personalizados únicos creados en colaboración directa contigo. Tu visión, nuestra maestría.",
       ctaLabel: "CONSULTAR",
       ctaHref: "#",
+      imageSrc: "/assets/card-sketches/custom.png",
     },
     {
       id: "coverups",
@@ -49,15 +53,19 @@ export const headerHeroConfigV2: HeaderHeroConfig = {
       body: "Transformamos tatuajes existentes en obras maestras nuevas. Maestría en rediseño y cobertura.",
       ctaLabel: "CONSULTAR",
       ctaHref: "#",
+      imageSrc: "/assets/card-sketches/coverups.png",
     },
   ],
   visualFraming: {
     ...headerHeroConfig.visualFraming,
-    layoutSplit: "75/25",
+    layoutSplit: "45/55",
     pinDistanceVh: 520,
     scrub: 1,
     machineFeatherStrength: 0,
-    visualScale: 0.9, // Reduced zoom to preserve vertical information (9:16)
-    visualOffsetX: 0.0, // Centered
+    visualScale: 1.0, // Scale relative to exact contain fit
+    bgScale: 0.9,
+    bgOffsetX: -0.08,
+    cardsRevealStart: 0.18,
+    cardsRevealEnd: 0.8,
   },
 };

@@ -93,7 +93,7 @@ export function Philosophy() {
   ];
 
   return (
-    <section ref={containerRef} id="philosophy" className="relative w-full py-32 px-4 md:px-8 overflow-hidden z-20">
+    <section ref={containerRef} id="philosophy" className="relative w-full py-20 md:py-24 px-4 md:px-8 overflow-hidden z-20">
       
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center mb-20">
         <p className="font-sans text-xs tracking-[0.4em] uppercase text-primary mb-4 border-b border-primary/20 pb-4 w-max">
@@ -105,7 +105,7 @@ export function Philosophy() {
         </h2>
       </div>
 
-      <div className="relative max-w-5xl mx-auto">
+      <div className="relative max-w-7xl mx-auto">
         {/* The Central Scrollytelling Line */}
         <div className="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-[2px] bg-border/30 origin-top -translate-x-1/2">
           <div ref={lineRef} className="w-full h-full bg-primary origin-top shadow-[0_0_15px_var(--primary)]"></div>

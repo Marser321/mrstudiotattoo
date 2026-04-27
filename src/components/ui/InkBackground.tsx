@@ -92,22 +92,22 @@ export function InkBackground() {
       <div className="absolute inset-0 w-full h-full opacity-[0.06] dark:opacity-[0.08]">
         <img 
           src="/assets/images/tattoo_portfolio_1_1776269943484.png" 
-          className="floating-tattoo absolute top-[10%] left-[5%] w-[400px] h-[400px] object-cover rounded-full mix-blend-difference blur-[2px] grayscale" 
+          className="floating-tattoo absolute top-[10%] left-[5%] w-[400px] h-[400px] object-cover rounded-full mix-blend-multiply dark:mix-blend-screen blur-[2px] grayscale" 
           alt="" 
         />
         <img 
           src="/assets/images/tattoo_portfolio_2_1776269957765.png" 
-          className="floating-tattoo absolute top-[30%] right-[10%] w-[350px] h-[350px] object-cover rounded-full mix-blend-difference blur-[1px] grayscale" 
+          className="floating-tattoo absolute top-[30%] right-[10%] w-[350px] h-[350px] object-cover rounded-full mix-blend-multiply dark:mix-blend-screen blur-[1px] grayscale" 
           alt="" 
         />
         <img 
           src="/assets/images/tattoo_portfolio_5_1776270044512.png" 
-          className="floating-tattoo absolute top-[60%] left-[15%] w-[500px] h-[500px] object-cover rounded-[30%] mix-blend-difference blur-[3px] grayscale" 
+          className="floating-tattoo absolute top-[60%] left-[15%] w-[500px] h-[500px] object-cover rounded-[30%] mix-blend-multiply dark:mix-blend-screen blur-[3px] grayscale" 
           alt="" 
         />
         <img 
           src="/assets/images/tattoo_portfolio_4_1776270028982.png" 
-          className="floating-tattoo absolute top-[85%] right-[5%] w-[450px] h-[450px] object-cover rounded-[30%] mix-blend-difference blur-[2px] grayscale" 
+          className="floating-tattoo absolute top-[85%] right-[5%] w-[450px] h-[450px] object-cover rounded-[30%] mix-blend-multiply dark:mix-blend-screen blur-[2px] grayscale" 
           alt="" 
         />
       </div>

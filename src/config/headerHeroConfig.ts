@@ -5,6 +5,7 @@ export interface HeaderHeroCard {
   body: string;
   ctaLabel?: string;
   ctaHref?: string;
+  imageSrc?: string;
 }
 
 export interface HeaderHeroFonts {
@@ -53,7 +54,7 @@ export const headerHeroConfig: HeaderHeroConfig = {
   title: "Precision in Motion",
   ctaLabel: "Book Your Session",
   ctaHref: "/booking",
-  logoSrc: "/assets/logo.svg",
+  logoSrc: "/assets/logo.png",
   frameCount: 150,
   framePathPattern: "/assets/hero-sequence-v2/frame_{index}.webp",
   bgFrameCount: 150,

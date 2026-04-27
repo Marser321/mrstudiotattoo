@@ -3,13 +3,13 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { cn } from "@/lib/utils";
+import { headerHeroConfigV2 } from "@/config/headerHeroConfigV2";
 import {
-  headerHeroConfigV2,
   type HeaderHeroCard,
   type HeaderHeroConfig,
   type HeaderHeroFonts,
   type HeaderHeroVisualFraming,
-} from "@/config/headerHeroConfigV2";
+} from "@/config/headerHeroConfig";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -87,12 +87,13 @@ function drawImagePanel(
   alpha: number,
   scale: number,
   offsetX: number,
+  fit: "cover" | "contain" = "cover"
 ) {
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
   const hRatio = canvasWidth / image.width;
   const vRatio = canvasHeight / image.height;
-  const ratio = Math.max(hRatio, vRatio) * scale;
+  const ratio = (fit === "contain" ? Math.min(hRatio, vRatio) : Math.max(hRatio, vRatio)) * scale;
   const drawWidth = image.width * ratio;
   const drawHeight = image.height * ratio;
   const baseX = (canvasWidth - drawWidth) * 0.5;
@@ -138,6 +139,7 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
   const cardsPaneRef = useRef<HTMLDivElement>(null);
   const cardsViewportRef = useRef<HTMLDivElement>(null);
   const cardsTrackRef = useRef<HTMLDivElement>(null);
+  const shellWrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const staticBgRef = useRef<HTMLImageElement>(null);
   const staticMachineRef = useRef<HTMLImageElement>(null);
@@ -158,7 +160,7 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
   const [firstBgFrameSrc, setFirstBgFrameSrc] = useState<string | null>(null);
 
   const shouldUseStaticFallback =
-    prefersReducedMotion || hasMachineError || isMobileViewport || machineLoadedCount < 2;
+    prefersReducedMotion || hasMachineError || machineLoadedCount < 2;
 
   const updateCardsMetrics = useCallback(() => {
     const track = cardsTrackRef.current;
@@ -267,6 +269,7 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
           featherOpacity,
           resolvedConfig.visualFraming.visualScale,
           resolvedConfig.visualFraming.visualOffsetX,
+          "contain"
         );
         context.restore();
       }
@@ -280,6 +283,7 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
         1,
         resolvedConfig.visualFraming.visualScale,
         resolvedConfig.visualFraming.visualOffsetX,
+        "contain"
       );
       context.restore();
 
@@ -441,6 +445,8 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    let resizeTimer: number;
+
     const handleResize = () => {
       resizeCanvas();
       updateCardsMetrics();
@@ -454,11 +460,17 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
       ScrollTrigger.refresh();
     };
 
+    const debouncedResize = () => {
+      window.cancelAnimationFrame(resizeTimer);
+      resizeTimer = window.requestAnimationFrame(handleResize);
+    };
+
     handleResize();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", debouncedResize, { passive: true });
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.cancelAnimationFrame(resizeTimer);
+      window.removeEventListener("resize", debouncedResize);
     };
   }, [applyCardsTrackByProgress, drawComposite, resizeCanvas, shouldUseStaticFallback, updateCardsMetrics]);
 
@@ -477,28 +489,76 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
       updateCardsMetrics();
       drawComposite(0);
 
-      const tween = gsap.to(playheadRef.current, {
-        frame: resolvedConfig.frameCount - 1,
-        snap: "frame",
-        ease: "none",
-        onUpdate: () => {
-          drawComposite(Math.round(playheadRef.current.frame));
-        },
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: () => `+=${Math.round(window.innerHeight * (resolvedConfig.visualFraming.pinDistanceVh / 100))}`,
-          scrub: resolvedConfig.visualFraming.scrub,
-          pin: stageRef.current,
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
-        },
-      });
+      let cleanup: () => void;
 
-      return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
+      if (isMobileViewport) {
+        const tween = gsap.to(playheadRef.current, {
+          frame: resolvedConfig.frameCount - 1,
+          snap: "frame",
+          ease: "none",
+          onUpdate: () => {
+            drawComposite(Math.round(playheadRef.current.frame));
+          },
+          duration: resolvedConfig.frameCount / 30,
+          repeat: -1,
+          yoyo: true,
+        });
+        cleanup = () => {
+          tween.kill();
+        };
+      } else {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: () =>
+              `+=${Math.round(window.innerHeight * (resolvedConfig.visualFraming.pinDistanceVh / 100))}`,
+            scrub: resolvedConfig.visualFraming.scrub,
+            pin: stageRef.current,
+            invalidateOnRefresh: true,
+            anticipatePin: 1,
+          },
+        });
+
+        tl.to(
+          playheadRef.current,
+          {
+            frame: resolvedConfig.frameCount - 1,
+            snap: "frame",
+            ease: "none",
+            duration: 1,
+            onUpdate: () => {
+              drawComposite(Math.round(playheadRef.current.frame));
+            },
+          },
+          0,
+        );
+
+        if (shellWrapperRef.current) {
+          // The next section starts entering when 100vh remains in the pin distance.
+          const overlapFraction = 100 / resolvedConfig.visualFraming.pinDistanceVh;
+          // Start the exit right as the next section arrives
+          const parallaxStart = Math.max(0, 1 - overlapFraction);
+
+          tl.to(
+            shellWrapperRef.current,
+            {
+              y: "-110vh", // Move completely off-screen upwards
+              opacity: 0,
+              ease: "power2.inOut",
+              duration: 1 - parallaxStart,
+            },
+            parallaxStart,
+          );
+        }
+
+        cleanup = () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+        };
+      }
+
+      return cleanup;
     },
     {
       scope: sectionRef,
@@ -510,6 +570,7 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
         resolvedConfig.visualFraming.scrub,
         shouldUseStaticFallback,
         updateCardsMetrics,
+        isMobileViewport,
       ],
     },
   );
@@ -559,7 +620,7 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
   const visualPaneStyle: CSSProperties = {
     height: isMobileViewport ? "62vh" : "100%",
     background:
-      "radial-gradient(circle at 30% 45%, rgba(255,255,255,0.08), transparent 42%), #020617",
+      "radial-gradient(circle at 30% 45%, rgba(220,38,38,0.06), transparent 42%), #0a0000",
   };
 
   const shellStyle: CSSProperties = isMobileViewport
@@ -591,13 +652,13 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
       className="relative w-full overflow-hidden bg-black text-white"
       style={sectionStyle}
     >
-      <div ref={stageRef} className={cn("relative overflow-hidden", isMobileViewport ? "min-h-screen" : "h-screen")}>
-        <div className="relative h-full w-full" style={shellStyle}>
+      <div ref={stageRef} className={cn("relative overflow-hidden pt-[104px]", isMobileViewport ? "min-h-screen" : "h-screen")}>
+        <div ref={shellWrapperRef} className="relative h-full w-full" style={shellStyle}>
           <div
             ref={visualPaneRef}
             className={cn(
               "relative min-w-0 overflow-hidden",
-              isMobileViewport ? "border-b border-white/8" : "border-r border-white/8",
+              isMobileViewport ? "" : "",
             )}
             style={visualPaneStyle}
           >
@@ -623,7 +684,7 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
                     loading="eager"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-black to-slate-950" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-black to-[#0a0000]" />
                 )}
               </>
             ) : (
@@ -631,9 +692,12 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
             )}
 
             <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/15 to-black/55" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1a0505] via-transparent to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1a0505]/80 via-transparent to-black/40" />
 
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_24%,rgba(255,255,255,0.12)_0_1px,transparent_1px),radial-gradient(circle_at_78%_64%,rgba(255,255,255,0.09)_0_1px,transparent_1px),radial-gradient(circle_at_42%_84%,rgba(255,255,255,0.08)_0_1px,transparent_1px)] bg-[length:3px_3px,4px_4px,5px_5px] opacity-15 mix-blend-soft-light" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_24%,rgba(220,38,38,0.08)_0_1px,transparent_1px),radial-gradient(circle_at_78%_64%,rgba(220,38,38,0.06)_0_1px,transparent_1px),radial-gradient(circle_at_42%_84%,rgba(255,255,255,0.08)_0_1px,transparent_1px)] bg-[length:3px_3px,4px_4px,5px_5px] opacity-15 mix-blend-multiply dark:mix-blend-screen" />
+
+            {/* Transition fade to black at the bottom */}
+            <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none" />
 
             <div className="absolute bottom-4 left-4 z-20 max-w-[80%] md:bottom-9 md:left-8 md:max-w-[26rem]">
               <p
@@ -660,15 +724,9 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
 
           <div
             ref={cardsPaneRef}
-            className="relative min-w-0 overflow-hidden bg-gradient-to-b from-[#111111]/90 to-[#060606]/98 shadow-[inset_1px_0_0_rgba(255,255,255,0.07)]"
+            className="relative min-w-0 overflow-hidden bg-black"
           >
-            {resolvedConfig.logoSrc ? (
-              <img
-                src={resolvedConfig.logoSrc}
-                alt="Client logo"
-                className="absolute right-4 top-4 z-20 hidden w-24 opacity-80 drop-shadow-[0_8px_22px_rgba(0,0,0,0.32)] md:block"
-              />
-            ) : null}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.08),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.05),transparent_50%)]" />
 
             <div
               ref={cardsViewportRef}
@@ -689,48 +747,62 @@ export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
                     key={card.id}
                     data-id={card.id}
                     className={cn(
-                      "flex min-h-full flex-col justify-end gap-3 border border-white/12 bg-black/45 p-4 shadow-[0_20px_55px_rgba(0,0,0,0.35)] backdrop-blur-[24px] backdrop-saturate-[160%] transition-transform duration-300 hover:-translate-y-1 hover:border-white/25",
+                      "group relative flex min-h-full flex-col justify-end gap-3 overflow-hidden border border-white/12 bg-black/45 p-4 shadow-[0_20px_55px_rgba(0,0,0,0.35)] backdrop-blur-[24px] backdrop-saturate-[160%] transition-transform duration-300 hover:-translate-y-1 hover:border-white/25",
                       isMobileViewport ? "min-h-0" : "",
                     )}
                     style={{
                       flex: isMobileViewport ? "1 1 auto" : "0 0 min(78%, 22rem)",
                     }}
                   >
-                    <p
-                      className={cn(
-                        resolvedConfig.fonts.cardEyebrowClass,
-                        "m-0 text-[10px] uppercase tracking-[0.3em] text-white/66",
-                      )}
-                    >
-                      {card.eyebrow}
-                    </p>
-                    <h2
-                      className={cn(
-                        resolvedConfig.fonts.cardTitleClass,
-                        "m-0 text-[clamp(1.45rem,2.2vw,2rem)] leading-[1.03] text-white",
-                      )}
-                    >
-                      {card.title}
-                    </h2>
-                    <p
-                      className={cn(
-                        resolvedConfig.fonts.cardBodyClass,
-                        "m-0 text-sm leading-relaxed text-white/80",
-                      )}
-                    >
-                      {card.body}
-                    </p>
-                    {card.ctaLabel ? (
-                      <a
-                        href={card.ctaHref ?? "#"}
+                    {card.imageSrc && (
+                      <>
+                        <div className="absolute inset-0 z-0 bg-[#060606]">
+                          <img
+                            src={card.imageSrc}
+                            alt={card.title}
+                            className="h-full w-full object-contain p-4 opacity-30 transition-all duration-700 group-hover:scale-105 group-hover:opacity-50"
+                          />
+                        </div>
+                        <div className="absolute inset-0 z-0 bg-gradient-to-t from-black via-black/80 to-black/10 pointer-events-none" />
+                      </>
+                    )}
+                    <div className="relative z-10 flex h-full flex-col justify-end gap-3">
+                      <p
                         className={cn(
-                          resolvedConfig.fonts.buttonClass,
-                          "mt-auto inline-flex w-fit items-center border border-white/42 px-4 py-3 text-[10px] uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-black",
+                          resolvedConfig.fonts.cardEyebrowClass,
+                          "m-0 text-[10px] uppercase tracking-[0.3em] text-white/66",
                         )}
                       >
-                        {card.ctaLabel}
-                      </a>
-                    ) : null}
+                        {card.eyebrow}
+                      </p>
+                      <h2
+                        className={cn(
+                          resolvedConfig.fonts.cardTitleClass,
+                          "m-0 text-[clamp(1.45rem,2.2vw,2rem)] leading-[1.03] text-white",
+                        )}
+                      >
+                        {card.title}
+                      </h2>
+                      <p
+                        className={cn(
+                          resolvedConfig.fonts.cardBodyClass,
+                          "m-0 text-sm leading-relaxed text-white/80",
+                        )}
+                      >
+                        {card.body}
+                      </p>
+                      {card.ctaLabel ? (
+                        <a
+                          href={card.ctaHref ?? "#"}
+                          className={cn(
+                            resolvedConfig.fonts.buttonClass,
+                            "mt-auto inline-flex w-fit items-center border border-white/42 px-4 py-3 text-[10px] uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-black backdrop-blur-md",
+                          )}
+                        >
+                          {card.ctaLabel}
+                        </a>
+                      ) : null}
+                    </div>
                   </article>
                 ))}
               </div>

@@ -1,43 +1,45 @@
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { PenTool, Eye, Hexagon, Wand2, ArrowLeftRight, MessageSquare } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const services = [
   {
-    icon: '✦',
+    icon: PenTool,
     title: 'Fine Line',
     desc: 'Diseños delicados con líneas precisas. Cada trazo es calculado, cada detalle es intencional. Perfecto para minimalistas.',
     price: 'Desde $100',
   },
   {
-    icon: '◎',
+    icon: Eye,
     title: 'Realismo',
     desc: 'Retratos hiper-realistas en blanco y negro que capturan la esencia de tus momentos y personas más queridas.',
     price: 'Desde $300',
   },
   {
-    icon: '⬡',
+    icon: Hexagon,
     title: 'Geométrico',
     desc: 'Patrones geométricos y mandalas de precisión matemática. Líneas perfectas que crean armonía visual.',
     price: 'Desde $150',
   },
   {
-    icon: '◈',
+    icon: Wand2,
     title: 'Custom Artwork',
     desc: 'Diseños personalizados únicos creados en colaboración directa contigo. Tu visión, nuestra maestría.',
     price: 'Consultar',
   },
   {
-    icon: '⟐',
+    icon: ArrowLeftRight,
     title: 'Cover-Ups',
     desc: 'Transformamos tatuajes existentes en obras maestras nuevas. Maestría en rediseño y cobertura.',
     price: 'Consultar',
   },
   {
-    icon: '⊕',
+    icon: MessageSquare,
     title: 'Consultas',
     desc: 'Sesión de diseño y planificación sin compromiso. Discutimos ideas, referencias y presupuesto juntos.',
     price: 'Gratis',
@@ -53,7 +55,7 @@ const stats = [
 
 export function Services() {
   const containerRef = useRef<HTMLElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const cardsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const statsRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -100,13 +102,13 @@ export function Services() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} id="services" className="relative w-full py-32 px-4 md:px-16 lg:px-32 overflow-hidden">
+    <section ref={containerRef} id="services" className="relative w-full py-20 md:py-24 px-4 md:px-16 lg:px-32 overflow-hidden">
       
       {/* Decorative accent orb */}
       <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[200px] pointer-events-none"></div>
 
       {/* Stats Bar */}
-      <div ref={statsRef} className="max-w-6xl mx-auto mb-24">
+      <div ref={statsRef} className="max-w-7xl mx-auto mb-24">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 luxury-glass p-8 md:p-12">
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col items-center text-center">
@@ -131,35 +133,41 @@ export function Services() {
       </div>
 
       {/* Services Grid */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service, idx) => (
-          <div
-            key={service.title}
-            ref={el => { cardsRef.current[idx] = el }}
-            className="group relative luxury-glass p-8 border border-border/30 hover:border-primary/30 transition-all duration-500 cursor-default overflow-hidden"
-          >
-            {/* Hover glow */}
-            <div className="absolute inset-0 bg-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-            
-            {/* Icon */}
-            <div className="text-primary text-3xl mb-6 group-hover:scale-110 transition-transform duration-500">{service.icon}</div>
-            
-            {/* Content */}
-            <h3 className="font-serif text-2xl mb-3 group-hover:text-primary transition-colors duration-300">{service.title}</h3>
-            <p className="font-sans text-sm text-muted-foreground leading-relaxed mb-6">{service.desc}</p>
-            
-            {/* Price tag */}
-            <div className="flex items-center justify-between">
-              <span className="font-sans text-xs tracking-widest uppercase text-primary/70">{service.price}</span>
-              <span className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-                Más Info →
-              </span>
-            </div>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {services.map((service, idx) => {
+          const Icon = service.icon;
+          return (
+            <Link
+              to="/booking"
+              key={service.title}
+              ref={el => { cardsRef.current[idx] = el }}
+              className="block group relative luxury-glass p-8 border border-border/30 hover:border-primary/30 transition-all duration-500 overflow-hidden"
+            >
+              {/* Hover glow */}
+              <div className="absolute inset-0 bg-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+              
+              {/* Icon */}
+              <div className="text-primary mb-6 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] transition-all duration-500 w-fit">
+                <Icon size={32} strokeWidth={1.5} />
+              </div>
+              
+              {/* Content */}
+              <h3 className="font-serif text-2xl mb-3 group-hover:text-primary transition-colors duration-300">{service.title}</h3>
+              <p className="font-sans text-sm text-muted-foreground leading-relaxed mb-6">{service.desc}</p>
+              
+              {/* Price tag */}
+              <div className="flex items-center justify-between">
+                <span className="font-sans text-xs tracking-widest uppercase text-primary/70">{service.price}</span>
+                <span className="font-sans text-[10px] tracking-[0.3em] uppercase text-primary opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                  Reservar →
+                </span>
+              </div>
 
-            {/* Bottom accent line */}
-            <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"></div>
-          </div>
-        ))}
+              {/* Bottom accent line */}
+              <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"></div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

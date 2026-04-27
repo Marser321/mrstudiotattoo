@@ -90,11 +90,47 @@
   --border: rgba(255, 255, 255, 0.15);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIGHT MODE — Parchment & Blackwork
+   Philosophy: Warm parchment canvas. Carbon ink typography. Red blade accents.
+   Rule: NEVER use pure white (#FFFFFF) as background.
+   ───────────────────────────────────────────────────────────────────────────── */
+.light {
+  --background: #F9F9F8;
+  --foreground: #121212;
+  --card: #F0EDE6;
+  --card-foreground: #121212;
+  --popover: #F9F9F8;
+  --popover-foreground: #121212;
+  --primary: #DC2626;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EFECE5;
+  --secondary-foreground: #121212;
+  --muted: #E8E4DB;
+  --muted-foreground: rgba(18, 18, 18, 0.45);
+  --accent: #EFECE5;
+  --accent-foreground: #121212;
+  --destructive: #991B1B;
+  --border: rgba(18, 18, 18, 0.10);
+  --input: rgba(18, 18, 18, 0.06);
+  --ring: #121212;
+
+  --sidebar: #F0EDE6;
+  --sidebar-foreground: #121212;
+  --sidebar-primary: #DC2626;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E8E4DB;
+  --sidebar-accent-foreground: #121212;
+  --sidebar-border: rgba(18, 18, 18, 0.08);
+  --sidebar-ring: #121212;
+}
+
 @layer utilities {
+  /* ── Luxury Glass: light = frosted parchment, dark = frosted void ── */
   .luxury-glass {
-    background: rgba(10, 10, 10, 0.03);
+    background: rgba(249, 249, 248, 0.6);
     backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(10, 10, 10, 0.05);
+    border: 1px solid rgba(18, 18, 18, 0.06);
     border-radius: 20px;
   }
   .dark .luxury-glass {
@@ -103,12 +139,13 @@
   }
   
   .magnetic-element {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease, border-color 0.3s ease;
   }
   .magnetic-element:hover {
-    transform: scale(1.05) translateY(-2px);
+    transform: scale(1.02) translateY(-1px);
   }
   
+  /* ── Film Grain: lighter in light mode ── */
   .static-grain {
     position: fixed;
     top: 0;
@@ -117,9 +154,12 @@
     height: 100%;
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.05;
+    opacity: 0.04;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     mix-blend-mode: overlay;
+  }
+  .dark .static-grain {
+    opacity: 0.05;
   }
 
   @keyframes shimmer {
@@ -137,7 +177,7 @@
     @apply border-border outline-ring/50;
   }
   
-  /* Minimalist Scrollbar */
+  /* Minimalist Scrollbar — Dark (ink-red) */
   ::-webkit-scrollbar {
     width: 4px;
   }
@@ -151,6 +191,13 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(220, 38, 38, 0.5);
   }
+  /* Minimalist Scrollbar — Light (carbon ink) */
+  .light ::-webkit-scrollbar-thumb {
+    background: rgba(18, 18, 18, 0.15);
+  }
+  .light ::-webkit-scrollbar-thumb:hover {
+    background: rgba(18, 18, 18, 0.35);
+  }
 
   body {
     @apply bg-background text-foreground antialiased;
@@ -158,6 +205,7 @@
   }
   html {
     @apply font-sans scroll-smooth;
+    scroll-padding-top: 120px;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;

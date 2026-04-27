@@ -20,11 +20,31 @@ export const ghlService = {
   },
 
   async getSlots(calendarId: string, startDate: string, endDate: string) {
-    const { data: result, error } = await supabase.functions.invoke('get-ghl-slots', {
-      body: { calendarId, startDate, endDate }
+    const baseUrl = import.meta.env.VITE_SUPABASE_URL
+    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+    if (!baseUrl || !anonKey) {
+      throw new Error('Supabase no está configurado.')
+    }
+
+    const url = new URL(`${baseUrl}/functions/v1/get-calendar-slots`)
+    url.searchParams.set('calendarId', calendarId)
+    url.searchParams.set('startDate', startDate)
+    url.searchParams.set('endDate', endDate)
+
+    const response = await fetch(url.toString(), {
+      headers: {
+        'Authorization': `Bearer ${anonKey}`,
+        'Content-Type': 'application/json',
+      },
     })
-    
-    if (error) throw error
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ error: 'Unknown error' }))
+      throw new Error(err.error || `HTTP ${response.status}`)
+    }
+
+    const result = await response.json()
     return result.slots || []
   },
 

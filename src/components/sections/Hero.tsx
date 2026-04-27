@@ -17,7 +17,7 @@ export function Hero() {
     <section className="relative w-full min-h-[90vh] flex flex-col justify-center px-4 md:px-16 lg:px-32 pt-32 pb-16">
       
       {/* Decorative Red Blur Orbs matching "Tattoo Anatomy" ref */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-[120px] -z-10 pointer-events-none mix-blend-screen"></div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-[120px] -z-10 pointer-events-none mix-blend-multiply dark:mix-blend-screen"></div>
       
       <div className="w-full flex flex-col lg:flex-row items-center justify-between z-10 gap-16 relative">
         

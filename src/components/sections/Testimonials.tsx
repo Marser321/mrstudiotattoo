@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,7 +70,7 @@ export function Testimonials() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} className="relative w-full py-32 px-4 md:px-16 lg:px-32 overflow-hidden">
+    <section ref={containerRef} className="relative w-full py-20 md:py-24 px-4 md:px-16 lg:px-32 overflow-hidden">
       
       {/* Decorative accent */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[250px] pointer-events-none"></div>
@@ -144,14 +145,14 @@ export function Testimonials() {
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-16 w-10 h-10 md:w-12 md:h-12 rounded-full border border-border/30 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300 text-muted-foreground backdrop-blur-sm"
           aria-label="Previous testimonial"
         >
-          ←
+          <ChevronLeft size={20} strokeWidth={1.5} />
         </button>
         <button
           onClick={() => setActiveIndex((prev) => (prev + 1) % testimonials.length)}
           className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-16 w-10 h-10 md:w-12 md:h-12 rounded-full border border-border/30 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300 text-muted-foreground backdrop-blur-sm"
           aria-label="Next testimonial"
         >
-          →
+          <ChevronRight size={20} strokeWidth={1.5} />
         </button>
       </div>
     </section>

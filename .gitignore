@@ -28,3 +28,9 @@ dist-ssr
 .DS_Store
 public/assets/hero-sequence/
 whisk/
+
+venv/
+*.zip
+.agent/
+Mr Studio Tattoo 2/
+mr-tato-assets-only/

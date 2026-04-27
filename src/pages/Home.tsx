@@ -4,6 +4,7 @@ import { HeroSequenceHeaderV2 } from '../components/sections/HeroSequenceHeaderV
 import { Portfolio } from '../components/sections/Portfolio'
 import { Philosophy } from '../components/sections/Philosophy'
 import { Artists } from '../components/sections/Artists'
+import { Piercings } from '../components/sections/Piercings'
 import { Testimonials } from '../components/sections/Testimonials'
 import { InkBackground } from '../components/ui/InkBackground'
 import { SectionTransition } from '../components/ui/SectionTransition'
@@ -18,7 +19,7 @@ export function Home() {
       <main className="relative z-10 w-full overflow-hidden bg-transparent">
         <HeroSequenceHeaderV2 />
         
-        <SectionTransition variant="gradient" height="16vh" accent />
+        <SectionTransition variant="gradient" height="8vh" accent />
 
         {/* The colossal text narrative replacing the empty layout space */}
         <Philosophy />
@@ -28,6 +29,11 @@ export function Home() {
         <Portfolio />
         
         <SectionTransition variant="fade" height="14vh" accent />
+        
+        {/* Body jewelry gallery */}
+        <Piercings />
+        
+        <SectionTransition variant="line" height="12vh" />
         
         {/* Meet the artists */}
         <Artists />
