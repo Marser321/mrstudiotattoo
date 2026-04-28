@@ -220,7 +220,7 @@ export function StepBodyZone({ serviceType = 'tattoo', selected, onToggle, custo
               return (
                 <g key={zone.id}>
                   <path
-                    ref={el => pathsRef.current[index] = el}
+                    ref={el => { pathsRef.current[index] = el; }}
                     d={zone.path}
                     fill={
                       isSelected
