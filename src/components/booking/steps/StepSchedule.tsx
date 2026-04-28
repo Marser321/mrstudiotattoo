@@ -55,24 +55,25 @@ export function StepSchedule({
         const { ghlService } = await import('@/services/ghlService');
         const dateStr = selectedDate.toISOString().split('T')[0];
 
-        // Try GHL integration first
-        if (artistId) {
-          // Map artist ID to calendar ID
-          const calendarMap: Record<string, string> = {
-            'ramses': 'CAL_RAMSES_ID',
-            'misael': 'CAL_MISAEL_ID',
-            'tony': 'CAL_TONY_ID',
-            'khris': 'CAL_KHRIS_ID',
-            'alejandro': 'CAL_ALEJANDRO_ID',
-            'alinette': 'CAL_ALINETTE_ID',
-          };
-          const calendarId = calendarMap[artistId] || '';
+        // Map artist ID to calendar ID using env vars
+        const calendarMap: Record<string, string> = {
+          'ramses': import.meta.env.VITE_GHL_CAL_RAMSES || 'CAL_RAMSES_ID',
+          'misael': import.meta.env.VITE_GHL_CAL_MISAEL || 'CAL_MISAEL_ID',
+          'tony': import.meta.env.VITE_GHL_CAL_TONY || 'CAL_TONY_ID',
+          'khris': import.meta.env.VITE_GHL_CAL_KHRIS || 'CAL_KHRIS_ID',
+          'alejandro': import.meta.env.VITE_GHL_CAL_ALEJANDRO || 'CAL_ALEJANDRO_ID',
+          'alinette': import.meta.env.VITE_GHL_CAL_ALINETTE || 'CAL_ALINETTE_ID',
+        };
+        
+        // Use specific artist calendar or fallback to the Studio's general/round-robin calendar
+        const calendarId = artistId 
+          ? calendarMap[artistId] 
+          : (import.meta.env.VITE_GHL_CAL_STUDIO || 'CAL_STUDIO_ID');
 
-          if (calendarId) {
-            const result = await ghlService.getSlots(calendarId, dateStr, dateStr);
-            if (!cancelled) setSlots(result);
-            return;
-          }
+        if (calendarId) {
+          const result = await ghlService.getSlots(calendarId, dateStr, dateStr);
+          if (!cancelled) setSlots(result);
+          return;
         }
 
         // Fallback: Generate mock slots when no artist or backend not configured

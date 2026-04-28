@@ -55,5 +55,55 @@ export const ghlService = {
     
     if (error) throw error
     return result
+  },
+
+  async uploadReferenceImage(file: File): Promise<string | null> {
+    if (!file) return null;
+    
+    // Generate a unique filename
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const filePath = `references/${fileName}`;
+
+    const { error } = await supabase.storage
+      .from('booking-references')
+      .upload(filePath, file);
+
+    if (error) {
+      console.error('Error uploading image to Supabase:', error);
+      return null;
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('booking-references')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  },
+
+  async submitProjectBrief(brief: any) {
+    const [firstName, ...rest] = brief.contact.name.split(' ')
+    const lastName = rest.join(' ')
+
+    // Prepare payload for GHL
+    const payload = {
+      contact: {
+        firstName,
+        lastName,
+        email: brief.contact.email,
+        phone: brief.contact.phone,
+        smsOptIn: brief.contact.smsOptIn
+      },
+      project: brief.project,
+      schedule: brief.schedule
+    }
+
+    const { data: result, error } = await supabase.functions.invoke('submit-ghl-project', {
+      body: payload
+    })
+    
+    if (error) throw error
+    return result
   }
 }

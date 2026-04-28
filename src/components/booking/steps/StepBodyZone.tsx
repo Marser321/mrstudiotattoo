@@ -39,8 +39,8 @@ const tattooFrontZones: BodyZone[] = [
   { id: 'right-thigh', key: 'rightThigh', path: 'M172,202 L210,202 L214,290 L176,290 Z', labelPos: { x: 193, y: 246 } },
   { id: 'left-knee', key: 'leftKnee', path: 'M126,290 L164,290 L162,318 L128,318 Z', labelPos: { x: 145, y: 304 } },
   { id: 'right-knee', key: 'rightKnee', path: 'M176,290 L214,290 L212,318 L178,318 Z', labelPos: { x: 195, y: 304 } },
-  { id: 'left-calf', key: 'leftCalf', path: 'M128,318 L162,318 L158,394 L132,394 Z', labelPos: { x: 145, y: 356 } },
-  { id: 'right-calf', key: 'rightCalf', path: 'M178,318 L212,318 L208,394 L182,394 Z', labelPos: { x: 195, y: 356 } },
+  { id: 'left-shin', key: 'leftShin', path: 'M128,318 L162,318 L158,394 L132,394 Z', labelPos: { x: 145, y: 356 } },
+  { id: 'right-shin', key: 'rightShin', path: 'M178,318 L212,318 L208,394 L182,394 Z', labelPos: { x: 195, y: 356 } },
   { id: 'left-foot', key: 'leftFoot', path: 'M128,394 L160,394 L162,420 L124,420 Z', labelPos: { x: 143, y: 407 } },
   { id: 'right-foot', key: 'rightFoot', path: 'M180,394 L212,394 L216,420 L178,420 Z', labelPos: { x: 197, y: 407 } },
 ];
@@ -48,25 +48,25 @@ const tattooFrontZones: BodyZone[] = [
 const tattooBackZones: BodyZone[] = [
   { id: 'head-back', key: 'head', path: 'M146,30 C146,14 158,4 170,4 C182,4 194,14 194,30 C194,46 182,56 170,56 C158,56 146,46 146,30 Z', labelPos: { x: 170, y: 32 } },
   { id: 'neck-back', key: 'neck', path: 'M160,56 L180,56 L180,72 L160,72 Z', labelPos: { x: 170, y: 64 } },
-  { id: 'upper-back', key: 'chest', path: 'M130,76 L210,76 L210,130 L130,130 Z', labelPos: { x: 170, y: 103 } },
-  { id: 'lower-back', key: 'abdomen', path: 'M138,130 L202,130 L202,178 L138,178 Z', labelPos: { x: 170, y: 154 } },
+  { id: 'upper-back', key: 'upperBack', path: 'M130,76 L210,76 L210,130 L130,130 Z', labelPos: { x: 170, y: 103 } },
+  { id: 'lower-back', key: 'lowerBack', path: 'M138,130 L202,130 L202,178 L138,178 Z', labelPos: { x: 170, y: 154 } },
   { id: 'left-shoulder-back', key: 'leftShoulder', path: 'M102,76 L130,76 L130,100 L108,100 Z', labelPos: { x: 116, y: 88 } },
   { id: 'right-shoulder-back', key: 'rightShoulder', path: 'M210,76 L238,76 L232,100 L210,100 Z', labelPos: { x: 224, y: 88 } },
-  { id: 'left-tricep', key: 'leftUpperArm', path: 'M96,100 L128,100 L124,156 L92,156 Z', labelPos: { x: 110, y: 128 } },
-  { id: 'right-tricep', key: 'rightUpperArm', path: 'M212,100 L244,100 L248,156 L216,156 Z', labelPos: { x: 230, y: 128 } },
+  { id: 'left-tricep', key: 'leftTricep', path: 'M96,100 L128,100 L124,156 L92,156 Z', labelPos: { x: 110, y: 128 } },
+  { id: 'right-tricep', key: 'rightTricep', path: 'M212,100 L244,100 L248,156 L216,156 Z', labelPos: { x: 230, y: 128 } },
   { id: 'left-forearm-back', key: 'leftForearm', path: 'M88,156 L122,156 L116,224 L82,224 Z', labelPos: { x: 102, y: 190 } },
   { id: 'right-forearm-back', key: 'rightForearm', path: 'M218,156 L252,156 L258,224 L224,224 Z', labelPos: { x: 238, y: 190 } },
   { id: 'left-hand-back', key: 'leftHand', path: 'M78,224 L114,224 L110,252 L74,252 Z', labelPos: { x: 94, y: 238 } },
   { id: 'right-hand-back', key: 'rightHand', path: 'M226,224 L262,224 L266,252 L230,252 Z', labelPos: { x: 246, y: 238 } },
-  { id: 'glutes', key: 'hip', path: 'M136,178 L204,178 L210,202 L130,202 Z', labelPos: { x: 170, y: 190 } },
-  { id: 'left-hamstring', key: 'leftThigh', path: 'M130,202 L168,202 L164,290 L126,290 Z', labelPos: { x: 147, y: 246 } },
-  { id: 'right-hamstring', key: 'rightThigh', path: 'M172,202 L210,202 L214,290 L176,290 Z', labelPos: { x: 193, y: 246 } },
-  { id: 'left-knee-back', key: 'leftKnee', path: 'M126,290 L164,290 L162,318 L128,318 Z', labelPos: { x: 145, y: 304 } },
-  { id: 'right-knee-back', key: 'rightKnee', path: 'M176,290 L214,290 L212,318 L178,318 Z', labelPos: { x: 195, y: 304 } },
+  { id: 'glutes', key: 'glutes', path: 'M136,178 L204,178 L210,202 L130,202 Z', labelPos: { x: 170, y: 190 } },
+  { id: 'left-hamstring', key: 'leftHamstring', path: 'M130,202 L168,202 L164,290 L126,290 Z', labelPos: { x: 147, y: 246 } },
+  { id: 'right-hamstring', key: 'rightHamstring', path: 'M172,202 L210,202 L214,290 L176,290 Z', labelPos: { x: 193, y: 246 } },
+  { id: 'left-knee-back', key: 'leftKneeBack', path: 'M126,290 L164,290 L162,318 L128,318 Z', labelPos: { x: 145, y: 304 } },
+  { id: 'right-knee-back', key: 'rightKneeBack', path: 'M176,290 L214,290 L212,318 L178,318 Z', labelPos: { x: 195, y: 304 } },
   { id: 'left-calf-back', key: 'leftCalf', path: 'M128,318 L162,318 L158,394 L132,394 Z', labelPos: { x: 145, y: 356 } },
   { id: 'right-calf-back', key: 'rightCalf', path: 'M178,318 L212,318 L208,394 L182,394 Z', labelPos: { x: 195, y: 356 } },
-  { id: 'left-heel', key: 'leftFoot', path: 'M128,394 L160,394 L162,420 L124,420 Z', labelPos: { x: 143, y: 407 } },
-  { id: 'right-heel', key: 'rightFoot', path: 'M180,394 L212,394 L216,420 L178,420 Z', labelPos: { x: 197, y: 407 } },
+  { id: 'left-heel', key: 'leftAnkle', path: 'M128,394 L160,394 L162,420 L124,420 Z', labelPos: { x: 143, y: 407 } },
+  { id: 'right-heel', key: 'rightAnkle', path: 'M180,394 L212,394 L216,420 L178,420 Z', labelPos: { x: 197, y: 407 } },
 ];
 
 // --- PIERCING ZONES (NODES) ---
@@ -130,11 +130,11 @@ export function StepBodyZone({ serviceType = 'tattoo', selected, onToggle, custo
           path.style.strokeDasharray = `${length}`;
           path.style.strokeDashoffset = `${length}`;
           void path.getBoundingClientRect(); // Trigger reflow
-          path.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.23, 1, 0.32, 1)';
+          path.style.transition = 'stroke-dashoffset 2s cubic-bezier(0.16, 1, 0.3, 1), fill-opacity 1s ease-in-out, stroke-opacity 1s ease-in-out';
           path.style.strokeDashoffset = '0';
         }
       });
-      setTimeout(() => setDrawComplete(true), 1500);
+      setTimeout(() => setDrawComplete(true), 2000);
     }, 50);
 
     return () => clearTimeout(timer);
@@ -185,18 +185,33 @@ export function StepBodyZone({ serviceType = 'tattoo', selected, onToggle, custo
 
           <svg
             viewBox="0 0 340 440"
-            className="w-[240px] sm:w-[280px] h-auto drop-shadow-xl"
+            className="w-[240px] sm:w-[280px] h-auto drop-shadow-2xl transition-transform duration-1000 ease-out hover:scale-[1.02]"
             fill="none"
           >
             <defs>
               <filter id="glassmorphism" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="2" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComponentTransfer in="blur" result="glow1">
+                  <feFuncA type="linear" slope="0.5"/>
+                </feComponentTransfer>
+                <feMerge>
+                  <feMergeNode in="glow1" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
               </filter>
               <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur1" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
               </filter>
+              <linearGradient id="selectedGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0.1" />
+              </linearGradient>
             </defs>
 
             {/* Static Background Outline (Only visible if Piercing, to guide the user) */}
@@ -224,25 +239,29 @@ export function StepBodyZone({ serviceType = 'tattoo', selected, onToggle, custo
                     d={zone.path}
                     fill={
                       isSelected
-                        ? 'var(--color-primary)'
+                        ? (isPiercing ? 'var(--color-primary)' : 'url(#selectedGradient)')
                         : isHovered
                           ? 'var(--color-primary)'
                           : isPiercing ? 'var(--color-card)' : 'transparent'
                     }
-                    fillOpacity={!drawComplete ? 0 : isSelected ? (isPiercing ? 1 : 0.25) : isHovered ? (isPiercing ? 0.8 : 0.08) : (isPiercing ? 0.4 : 0)}
+                    fillOpacity={!drawComplete ? 0 : isSelected ? (isPiercing ? 1 : 1) : isHovered ? (isPiercing ? 0.8 : 0.15) : (isPiercing ? 0.4 : 0)}
                     stroke={
                       isSelected
                         ? 'var(--color-primary)'
                         : isHovered
                           ? 'var(--color-primary)'
-                          : isPiercing ? 'var(--color-primary)' : 'var(--color-border)'
+                          : isPiercing ? 'var(--color-primary)' : 'currentColor'
                     }
                     strokeWidth={strokeW}
-                    strokeOpacity={isSelected ? 1 : isHovered ? 0.8 : (isPiercing ? 0.5 : 0.3)}
+                    strokeOpacity={isSelected ? 1 : isHovered ? 0.8 : (isPiercing ? 0.5 : 0.15)}
                     strokeLinejoin="round"
                     strokeLinecap="round"
-                    filter={isSelected ? activeFilter : 'none'}
-                    className="cursor-pointer transition-colors duration-300"
+                    filter={isSelected ? activeFilter : isHovered && !isPiercing ? 'url(#glassmorphism)' : 'none'}
+                    className="cursor-pointer transition-all duration-500 ease-out"
+                    style={{
+                      transformOrigin: `${zone.labelPos.x}px ${zone.labelPos.y}px`,
+                      transform: (isHovered || isSelected) && isPiercing ? 'scale(1.2)' : 'scale(1)'
+                    }}
                     onClick={() => onToggle(zone.id)}
                     onMouseEnter={() => setHoveredZone(zone.id)}
                     onMouseLeave={() => setHoveredZone(null)}
@@ -298,11 +317,12 @@ export function StepBodyZone({ serviceType = 'tattoo', selected, onToggle, custo
                   if (!zone) return null;
                   
                   let labelText = t(`bookingV2.bodyZone.zones.${zone.key}`, { defaultValue: zone.key });
-                  if (id.includes('-back') || id === 'glutes') {
+                  const specificKeys = ['upperBack', 'lowerBack', 'leftTricep', 'rightTricep', 'glutes', 'leftHamstring', 'rightHamstring', 'leftKneeBack', 'rightKneeBack', 'leftAnkle', 'rightAnkle', 'leftShin', 'rightShin'];
+                  if (!specificKeys.includes(zone.key) && (id.includes('-back') || id === 'glutes')) {
                     labelText += ' (Atrás)';
                   }
-                  if (id.includes('-l')) labelText += ' (Izq)';
-                  if (id.includes('-r')) labelText += ' (Der)';
+                  if (!specificKeys.includes(zone.key) && id.includes('-l')) labelText += ' (Izq)';
+                  if (!specificKeys.includes(zone.key) && id.includes('-r')) labelText += ' (Der)';
                   
                   return (
                     <button

@@ -12,6 +12,7 @@ import { StepDimensions } from './steps/StepDimensions';
 import { StepSchedule } from './steps/StepSchedule';
 import { StepConfirmation } from './steps/StepConfirmation';
 import { MagneticButton } from '@/components/ui/MagneticButton';
+import { ghlService } from '@/services/ghlService';
 
 /* ─────────────────────────────────────────────────────────────────
  * BOOKING STATE — All project data captured across 7 steps
@@ -100,6 +101,7 @@ export function MultiStepBooking() {
   const [step, setStep] = useState(1);
   const [state, setState] = useState<BookingState>(initialState);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const TOTAL_STEPS = 7;
 
@@ -201,31 +203,46 @@ export function MultiStepBooking() {
 
   /* ── Submit ── */
   const handleSubmit = async () => {
-    // Log the complete project brief
-    const brief = {
-      contact: { name: state.name, email: state.email, phone: state.phone, smsOptIn: state.smsOptIn },
-      project: {
-        serviceType: state.serviceType,
-        styles: state.styles,
-        ideaType: state.ideaType,
-        description: state.description,
-        referenceImageName: state.referenceImageName,
-        preferredArtistId: state.preferredArtistId,
-        bodyZones: state.bodyZones,
-        customZone: state.customZone,
-        dimension: state.dimension,
-      },
-      schedule: {
-        date: state.selectedDate?.toISOString(),
-        time: state.selectedTime,
-      },
-    };
+    try {
+      setIsSubmitting(true);
+      
+      let uploadedImageUrl = '';
+      if (state.referenceFile) {
+        const url = await ghlService.uploadReferenceImage(state.referenceFile);
+        if (url) uploadedImageUrl = url;
+      }
 
-    console.log('📋 PROJECT BRIEF →', JSON.stringify(brief, null, 2));
+      const brief = {
+        contact: { name: state.name, email: state.email, phone: state.phone, smsOptIn: state.smsOptIn },
+        project: {
+          serviceType: state.serviceType,
+          styles: state.styles,
+          ideaType: state.ideaType,
+          description: state.description,
+          referenceImageName: state.referenceImageName,
+          referenceImageUrl: uploadedImageUrl,
+          preferredArtistId: state.preferredArtistId,
+          bodyZones: state.bodyZones,
+          customZone: state.customZone,
+          dimension: state.dimension,
+        },
+        schedule: {
+          date: state.selectedDate?.toISOString(),
+          time: state.selectedTime,
+        },
+      };
 
-    // TODO: MT-10 — Submit to GHL via ghlService.submitProjectBrief()
+      console.log('📋 PROJECT BRIEF →', JSON.stringify(brief, null, 2));
 
-    setIsSubmitted(true);
+      await ghlService.submitProjectBrief(brief);
+
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('Failed to submit booking:', err);
+      // Optional: Add toast notification for error
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   /* ── Confirmation screen ── */
@@ -325,22 +342,26 @@ export function MultiStepBooking() {
         <MagneticButton
           type="button"
           onClick={next}
-          disabled={!canNext()}
+          disabled={!canNext() || isSubmitting}
           magneticStrength={0.3}
           className="flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground font-sans text-xs
                      tracking-[0.15em] uppercase
                      hover:bg-primary/80 transition-all duration-300
-                     disabled:opacity-20 disabled:pointer-events-none
+                     disabled:opacity-50 disabled:pointer-events-none
                      focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:outline-none
                      group overflow-hidden relative"
           style={{ borderRadius: '0.5rem' }}
         >
           {/* Shimmer */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+          {!isSubmitting && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+          )}
           <span className="relative z-10">
-            {step === TOTAL_STEPS ? t('bookingV2.nav.finalize') : t('bookingV2.nav.next')}
+            {isSubmitting 
+              ? t('bookingV2.nav.submitting', 'Procesando...') 
+              : step === TOTAL_STEPS ? t('bookingV2.nav.finalize') : t('bookingV2.nav.next')}
           </span>
-          <ArrowRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-1 transition-transform" />
+          {!isSubmitting && <ArrowRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-1 transition-transform" />}
         </MagneticButton>
       </div>
     </div>

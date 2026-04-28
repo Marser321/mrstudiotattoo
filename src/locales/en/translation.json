@@ -453,7 +453,20 @@
         "leftCalf": "Left Calf",
         "rightCalf": "Right Calf",
         "leftFoot": "Left Foot",
-        "rightFoot": "Right Foot"
+        "rightFoot": "Right Foot",
+        "leftShin": "Left Shin",
+        "rightShin": "Right Shin",
+        "upperBack": "Upper Back",
+        "lowerBack": "Lower Back",
+        "leftTricep": "Left Tricep",
+        "rightTricep": "Right Tricep",
+        "glutes": "Glutes",
+        "leftHamstring": "Left Hamstring",
+        "rightHamstring": "Right Hamstring",
+        "leftKneeBack": "Back of Left Knee",
+        "rightKneeBack": "Back of Right Knee",
+        "leftAnkle": "Left Ankle",
+        "rightAnkle": "Right Ankle"
       }
     },
     "dimensions": {

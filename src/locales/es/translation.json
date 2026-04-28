@@ -453,7 +453,20 @@
         "leftCalf": "Pantorrilla Izq.",
         "rightCalf": "Pantorrilla Der.",
         "leftFoot": "Pie Izq.",
-        "rightFoot": "Pie Der."
+        "rightFoot": "Pie Der.",
+        "leftShin": "Espinilla Izq.",
+        "rightShin": "Espinilla Der.",
+        "upperBack": "Dorsales / Espalda Alta",
+        "lowerBack": "Lumbares / Espalda Baja",
+        "leftTricep": "Tríceps Izq.",
+        "rightTricep": "Tríceps Der.",
+        "glutes": "Glúteos",
+        "leftHamstring": "Isquiotibial Izq.",
+        "rightHamstring": "Isquiotibial Der.",
+        "leftKneeBack": "Corva Izq.",
+        "rightKneeBack": "Corva Der.",
+        "leftAnkle": "Tobillo Izq.",
+        "rightAnkle": "Tobillo Der."
       }
     },
     "dimensions": {

@@ -85,20 +85,20 @@ export function StepConfirmation({ brief }: StepConfirmationProps) {
   return (
     <div className="animate-in fade-in zoom-in-95 duration-700 text-center">
       {/* Success icon */}
-      <div className="w-20 h-20 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20 animate-in zoom-in duration-500">
+      <div className="w-20 h-20 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20 animate-in zoom-in duration-500 delay-150 fill-mode-both">
         <CheckCircle2 className="w-10 h-10 text-primary" />
       </div>
 
-      <h2 className="font-serif text-3xl md:text-5xl tracking-tight mb-3">
+      <h2 className="font-serif text-3xl md:text-5xl tracking-tight mb-3 animate-in slide-in-from-bottom-4 duration-500 delay-300 fill-mode-both">
         {t('bookingV2.confirmation.title')}{' '}
         <span className="italic font-light text-primary">{t('bookingV2.confirmation.accent')}</span>
       </h2>
-      <p className="font-sans text-sm text-muted-foreground mb-10 max-w-md mx-auto leading-relaxed">
+      <p className="font-sans text-sm text-muted-foreground mb-10 max-w-md mx-auto leading-relaxed animate-in slide-in-from-bottom-4 duration-500 delay-500 fill-mode-both">
         {t('bookingV2.confirmation.desc')}
       </p>
 
       {/* Summary card */}
-      <div className="border border-border bg-card rounded-xl p-6 md:p-8 max-w-lg mx-auto text-left mb-8">
+      <div className="border border-border bg-card rounded-xl p-6 md:p-8 max-w-lg mx-auto text-left mb-8 animate-in slide-in-from-bottom-8 duration-700 delay-700 fill-mode-both hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all">
         <h3 className="font-serif text-lg mb-5 text-foreground">
           {t('bookingV2.confirmation.summaryTitle')}
         </h3>
@@ -139,14 +139,14 @@ export function StepConfirmation({ brief }: StepConfirmationProps) {
       </div>
 
       {/* Artist brief notice */}
-      <div className="max-w-lg mx-auto mb-8 p-4 border border-primary/20 bg-primary/[0.03] rounded-xl">
+      <div className="max-w-lg mx-auto mb-8 p-4 border border-primary/20 bg-primary/[0.03] rounded-xl animate-in slide-in-from-bottom-4 duration-500 delay-1000 fill-mode-both">
         <p className="font-sans text-xs text-primary/80 leading-relaxed">
           ✨ {t('bookingV2.confirmation.artistBrief')}
         </p>
       </div>
 
       {/* Action buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+      <div className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto animate-in slide-in-from-bottom-4 duration-500 delay-1000 fill-mode-both">
         <button
           type="button"
           onClick={handleAddToCalendar}
