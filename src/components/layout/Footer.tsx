@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,6 +68,7 @@ const handleLinkLeave = (e: React.MouseEvent<HTMLElement>) => {
 };
 
 export function Footer() {
+  const { t } = useTranslation();
   const footerRef = useRef<HTMLElement>(null);
   const studioNameRef = useRef<HTMLDivElement>(null);
   const studioTextRef = useRef<HTMLDivElement>(null);
@@ -113,21 +115,13 @@ export function Footer() {
         }
       );
 
-      // Horizontal parallax drift on the inner text
-      gsap.fromTo(
-        studioTextRef.current,
-        { xPercent: 5 },
-        {
-          xPercent: -5,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: studioNameRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        }
-      );
+      // Infinite scrolling marquee
+      gsap.to(studioTextRef.current, {
+        xPercent: -50,
+        ease: 'none',
+        duration: 30, // Adjust speed here
+        repeat: -1,
+      });
     }
 
     /* ── Horizontal line draw animation ── */
@@ -166,20 +160,20 @@ export function Footer() {
                 className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em]"
                 style={{ color: 'var(--foreground-muted, #666)', fontFamily: "var(--font-body, 'DM Sans', sans-serif)" }}
               >
-                Documentación Legal
+                {t('footer.legalDoc')}
               </span>
             </div>
             <h3
               className="text-xl sm:text-2xl mb-2"
               style={{ color: 'var(--foreground, #F5F5F5)', fontFamily: "var(--font-display, 'Playfair Display', serif)", fontWeight: 600 }}
             >
-              Completa tu consentimiento antes de la cita
+              {t('footer.consentTitle')}
             </h3>
             <p
               className="text-sm leading-relaxed"
               style={{ color: 'var(--foreground-secondary, #A3A3A3)', fontFamily: "var(--font-body, 'DM Sans', sans-serif)" }}
             >
-              Formulario digital obligatorio. Para menores, se requiere presencia del tutor legal.
+              {t('footer.consentDesc')}
             </p>
           </div>
           <div className="flex gap-3 shrink-0 w-full sm:w-auto">
@@ -193,7 +187,7 @@ export function Footer() {
               onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--accent-hover, #EF4444)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--accent, #DC2626)')}
             >
-              Consentimiento
+              {t('footer.consentBtn')}
               <ArrowUpRight className="w-4 h-4 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5 transition-transform duration-200" />
             </Link>
             <a
@@ -213,7 +207,7 @@ export function Footer() {
                 e.currentTarget.style.color = 'var(--foreground-secondary, #A3A3A3)';
               }}
             >
-              Políticas
+              {t('footer.policiesBtn')}
             </a>
           </div>
         </div>
@@ -229,7 +223,7 @@ export function Footer() {
               className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] mb-8"
               style={{ color: 'var(--foreground-muted, #666)', fontFamily: "var(--font-body, 'DM Sans', sans-serif)" }}
             >
-              Navegación
+              {t('footer.navTitle')}
             </h4>
             <nav className="flex flex-col gap-1">
               {NAV_LINKS.map((link) => (
@@ -245,7 +239,7 @@ export function Footer() {
                     className="w-0 group-hover:w-3 h-px transition-all duration-500 ease-out"
                     style={{ background: 'var(--accent, #DC2626)' }}
                   />
-                  {link.label}
+                  {t(`nav.${link.label.toLowerCase()}`, { defaultValue: link.label })}
                 </Link>
               ))}
             </nav>
@@ -257,7 +251,7 @@ export function Footer() {
               className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] mb-8"
               style={{ color: 'var(--foreground-muted, #666)', fontFamily: "var(--font-body, 'DM Sans', sans-serif)" }}
             >
-              Contacto
+              {t('footer.contactTitle')}
             </h4>
 
             {/* Social */}
@@ -334,7 +328,7 @@ export function Footer() {
               className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] mb-8"
               style={{ color: 'var(--foreground-muted, #666)', fontFamily: "var(--font-body, 'DM Sans', sans-serif)" }}
             >
-              Reservar Sesión
+              {t('footer.bookTitle')}
             </h4>
 
             <p
@@ -344,8 +338,7 @@ export function Footer() {
                 fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
               }}
             >
-              Artistas especializados en realismo, fine&nbsp;line y diseño a medida. 
-              Walk-ins bienvenidos según disponibilidad.
+              {t('footer.bookDesc')}
             </p>
 
             <div className="flex items-center gap-3 mb-8"
@@ -355,7 +348,7 @@ export function Footer() {
               }}
             >
               <Clock className="w-4 h-4" />
-              <span className="text-xs uppercase tracking-[0.08em]">Lun — Sáb · 11:00 AM — 8:00 PM</span>
+              <span className="text-xs uppercase tracking-[0.08em]">{t('footer.schedule')}</span>
             </div>
 
             <Link
@@ -368,7 +361,7 @@ export function Footer() {
               onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--accent-hover, #EF4444)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--accent, #DC2626)')}
             >
-              Book Now
+              {t('footer.bookNowBtn')}
               <ArrowUpRight className="w-4 h-4 group-hover/book:translate-x-0.5 group-hover/book:-translate-y-0.5 transition-transform duration-200" />
             </Link>
 
@@ -391,7 +384,7 @@ export function Footer() {
               }}
             >
               <MapPin className="w-3.5 h-3.5" />
-              Get Directions
+              {t('footer.directions')}
             </a>
           </div>
         </div>
@@ -411,7 +404,7 @@ export function Footer() {
       >
         <div
           ref={studioTextRef}
-          className="whitespace-nowrap text-center leading-[0.85] font-bold uppercase"
+          className="flex whitespace-nowrap leading-[0.85] font-bold uppercase w-max"
           style={{
             fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
             fontSize: 'clamp(4rem, 14vw, 16rem)',
@@ -420,7 +413,11 @@ export function Footer() {
             letterSpacing: '-0.03em',
           }}
         >
-          MR STUDIO TATTOO
+          {/* We duplicate the text to create a seamless infinite marquee */}
+          <span className="pr-16">MR STUDIO TATTOO</span>
+          <span className="pr-16">MR STUDIO TATTOO</span>
+          <span className="pr-16">MR STUDIO TATTOO</span>
+          <span className="pr-16">MR STUDIO TATTOO</span>
         </div>
       </div>
 
@@ -439,15 +436,15 @@ export function Footer() {
             fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
           }}
         >
-          &copy; {new Date().getFullYear()} Mr Studio Tattoo. All Rights Reserved.
+          &copy; {new Date().getFullYear()} Mr Studio Tattoo. {t('footer.rights')}
         </p>
         <div
           className="flex gap-6 text-[0.6875rem] uppercase tracking-[0.1em]"
           style={{ fontFamily: "var(--font-body, 'DM Sans', sans-serif)" }}
         >
           {[
-            { label: 'Consentimiento', to: '/consent' },
-            { label: 'Políticas', href: '#policies' },
+            { label: t('footer.consentBtn'), to: '/consent' },
+            { label: t('footer.policiesBtn'), href: '#policies' },
             { label: 'Terms', href: '#terms' },
           ].map((item) =>
             'to' in item ? (

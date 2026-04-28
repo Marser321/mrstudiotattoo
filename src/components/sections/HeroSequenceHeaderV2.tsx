@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { headerHeroConfigV2 } from "@/config/headerHeroConfigV2";
 import {
   type HeaderHeroCard,
@@ -127,7 +128,23 @@ function resolveHeaderHeroConfig(input?: HeaderHeroConfigInput): HeaderHeroConfi
 }
 
 export function HeroSequenceHeaderV2({ config }: HeroSequenceHeaderProps) {
-  const resolvedConfig = useMemo(() => resolveHeaderHeroConfig(config), [config]);
+  const { t } = useTranslation();
+  const resolvedConfig = useMemo(() => {
+    const base = resolveHeaderHeroConfig(config);
+    return {
+      ...base,
+      title: t('hero.title', { defaultValue: base.title }),
+      eyebrow: t('hero.eyebrow', { defaultValue: base.eyebrow }),
+      ctaLabel: t('hero.ctaLabel', { defaultValue: base.ctaLabel }),
+      cards: base.cards.map(card => ({
+        ...card,
+        eyebrow: t(`hero.cards.${card.id}.eyebrow`, { defaultValue: card.eyebrow }),
+        title: t(`hero.cards.${card.id}.title`, { defaultValue: card.title }),
+        body: t(`hero.cards.${card.id}.body`, { defaultValue: card.body }),
+        ctaLabel: card.ctaLabel ? t(`hero.cards.${card.id}.ctaLabel`, { defaultValue: card.ctaLabel }) : undefined
+      }))
+    };
+  }, [config, t]);
   const split = useMemo(
     () => parseLayoutSplit(resolvedConfig.visualFraming.layoutSplit),
     [resolvedConfig.visualFraming.layoutSplit],

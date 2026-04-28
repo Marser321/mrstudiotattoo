@@ -1,24 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
 import { ArrowRight, Loader2, ChevronLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const sizes = [
-  { id: 'small', label: 'CHICO', duration: '1H', description: 'MINI / FINE LINE' },
-  { id: 'medium', label: 'MEDIO', duration: '2-3H', description: 'PIEZA MEDIA' },
-  { id: 'large', label: 'GRANDE', duration: '4H+', description: 'SESIÓN COMPLETA' },
+  { id: 'small', duration: '1H' },
+  { id: 'medium', duration: '2-3H' },
+  { id: 'large', duration: '4H+' },
 ];
 
-const formSchema = z.object({
-  name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
-  email: z.string().email('Correo electrónico inválido'),
-  phone: z.string().min(8, 'El teléfono debe tener al menos 8 dígitos'),
-  sizeId: z.string().min(1, 'Selecciona un tamaño'),
-});
-
-type FormData = z.infer<typeof formSchema>;
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  sizeId: string;
+};
 
 /* ──────────────────────────────────────────────────────────────────────
    INTAKE FORM — Theme-aware "Parchment & Blackwork" variant
@@ -28,6 +27,15 @@ type FormData = z.infer<typeof formSchema>;
    ────────────────────────────────────────────────────────────────────── */
 
 export function IntakeForm() {
+  const { t, i18n } = useTranslation();
+
+  const formSchema = useMemo(() => z.object({
+    name: z.string().min(3, t('booking.errors.name')),
+    email: z.string().email(t('booking.errors.email')),
+    phone: z.string().min(8, t('booking.errors.phone')),
+    sizeId: z.string().min(1, t('booking.errors.size')),
+  }), [t]);
+
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingSlots, setLoadingSlots] = useState(false);
@@ -65,7 +73,7 @@ export function IntakeForm() {
       const mocked = ['10:00 AM', '11:00 AM', '02:00 PM', '04:30 PM'];
       setSlots(mocked);
     } catch (err) {
-      toast.error('No se pudieron cargar los horarios');
+      toast.error(t('booking.errors.fetchSlots'));
     } finally {
       setLoadingSlots(false);
     }
@@ -83,7 +91,7 @@ export function IntakeForm() {
 
   const onSubmit = async () => {
     if (!selectedSlot || !selectedDate) {
-      toast.error('Por favor selecciona un horario');
+      toast.error(t('booking.errors.selectSlot'));
       return;
     }
 
@@ -93,11 +101,11 @@ export function IntakeForm() {
     try {
       console.log('Final Booking Data:', { ...data, date: selectedDate, time: selectedSlot });
       await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success('¡Cita Confirmada!', {
-        description: `Te esperamos el ${selectedDate} a las ${selectedSlot}.`,
+      toast.success(t('booking.success.title'), {
+        description: t('booking.success.desc', { date: selectedDate, time: selectedSlot }),
       });
     } catch (error) {
-       toast.error('Error al procesar la reserva');
+       toast.error(t('booking.errors.submitError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -114,7 +122,7 @@ export function IntakeForm() {
       {/* Header with Step Indicator */}
       <div className="flex justify-between items-center mb-10">
         <h3 className="font-serif text-3xl tracking-tighter text-foreground uppercase">
-          {step === 1 ? 'Tus Datos' : 'Tu Espacio'}
+          {step === 1 ? t('booking.ui.step1Title') : t('booking.ui.step2Title')}
         </h3>
         <div className="flex gap-2">
           <div className={`w-8 h-1 transition-all duration-500 ${step >= 1 ? 'bg-primary' : 'bg-border'}`} />
@@ -127,17 +135,17 @@ export function IntakeForm() {
         <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-500">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-1 md:col-span-2">
-              <label className={labelClasses}>Nombre Completo</label>
+              <label className={labelClasses}>{t('booking.ui.fullName')}</label>
               <input 
                 {...register('name')}
-                placeholder="MARIO MORERA"
+                placeholder="JOHN DOE"
                 className={inputClasses}
               />
               {errors.name && <p className={errorClasses}>{errors.name.message}</p>}
             </div>
 
             <div>
-              <label className={labelClasses}>Correo Electrónico</label>
+              <label className={labelClasses}>{t('booking.ui.email')}</label>
               <input 
                 {...register('email')}
                 type="email"
@@ -147,7 +155,7 @@ export function IntakeForm() {
               {errors.email && <p className={errorClasses}>{errors.email.message}</p>}
             </div>
             <div>
-              <label className={labelClasses}>Teléfono</label>
+              <label className={labelClasses}>{t('booking.ui.phone')}</label>
               <input 
                 {...register('phone')}
                 type="tel"
@@ -159,7 +167,7 @@ export function IntakeForm() {
           </div>
 
           <div>
-            <label className={labelClasses}>Tamaño de la Obra</label>
+            <label className={labelClasses}>{t('booking.ui.tattooSize')}</label>
             <div className="grid grid-cols-3 gap-3">
               {sizes.map((size) => (
                 <button
@@ -173,8 +181,8 @@ export function IntakeForm() {
                   }`}
                 >
                   <div className={`text-[8px] tracking-widest uppercase mb-1 ${watchSizeId === size.id ? 'text-primary' : 'text-muted-foreground/50'}`}>{size.duration}</div>
-                  <div className="font-serif text-lg leading-none mb-1 text-foreground">{size.label}</div>
-                  <div className="text-[7px] tracking-[0.2em] uppercase text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors whitespace-nowrap">{size.description}</div>
+                  <div className="font-serif text-lg leading-none mb-1 text-foreground">{t(`booking.sizes.${size.id}`)}</div>
+                  <div className="text-[7px] tracking-[0.2em] uppercase text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors whitespace-nowrap">{t(`booking.sizes.desc${size.id.charAt(0).toUpperCase() + size.id.slice(1)}`)}</div>
                 </button>
               ))}
             </div>
@@ -187,7 +195,7 @@ export function IntakeForm() {
             onClick={onNextStep}
             className="w-full py-5 bg-primary text-primary-foreground font-sans text-[11px] tracking-[0.5em] uppercase transition-all hover:bg-primary/90 disabled:opacity-20 flex items-center justify-center gap-4 rounded-[2px] group"
           >
-            Siguiente: Elegir Fecha
+            {t('booking.ui.nextBtn')}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
@@ -200,18 +208,18 @@ export function IntakeForm() {
             onClick={() => setStep(1)}
             className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ChevronLeft size={14} /> Volver a datos
+            <ChevronLeft size={14} /> {t('booking.ui.backBtn')}
           </button>
 
           <div className="space-y-4">
-             <label className={labelClasses}>Selecciona una Fecha</label>
+             <label className={labelClasses}>{t('booking.ui.selectDate')}</label>
              <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
                 {Array.from({length: 14}).map((_, i) => {
                   const d = new Date();
                   d.setDate(d.getDate() + i);
                   const dateStr = d.toISOString().split('T')[0];
                   const isSelected = selectedDate === dateStr;
-                  const dayName = d.toLocaleDateString('es-ES', { weekday: 'short' }).toUpperCase();
+                  const dayName = d.toLocaleDateString(i18n.language.startsWith('es') ? 'es-ES' : 'en-US', { weekday: 'short' }).toUpperCase();
                   const dayNum = d.getDate();
 
                   return (
@@ -231,7 +239,7 @@ export function IntakeForm() {
           </div>
 
           <div className="space-y-4">
-             <label className={labelClasses}>Horarios Disponibles</label>
+             <label className={labelClasses}>{t('booking.ui.availableSlots')}</label>
              {loadingSlots ? (
                <div className="grid grid-cols-2 gap-4">
                  {[1,2,3,4].map(i => <div key={i} className="h-14 bg-muted animate-pulse rounded-[2px]" />)}
@@ -263,7 +271,7 @@ export function IntakeForm() {
             ) : (
               <>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                <span>Confirmar Reserva</span>
+                <span>{t('booking.ui.confirmBtn')}</span>
                 <CheckCircle2 size={16} />
               </>
             )}
@@ -272,7 +280,7 @@ export function IntakeForm() {
           <div className="text-center pt-4">
             <a href="/consent" target="_blank" className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.1em] uppercase text-primary hover:text-primary/80 transition-colors">
               <span className="w-3 h-3">✍️</span>
-              Rellenar Consentimiento Obligatorio
+              {t('booking.ui.consentText')}
             </a>
           </div>
         </div>

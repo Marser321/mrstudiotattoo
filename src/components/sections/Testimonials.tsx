@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,13 +41,47 @@ const testimonials = [
 ];
 
 export function Testimonials() {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const testimonialsList = [
+    {
+      quote: t('testimonials.items.0.quote', { defaultValue: testimonials[0].quote }),
+      author: t('testimonials.items.0.author', { defaultValue: testimonials[0].author }),
+      rating: 5,
+      service: t('testimonials.items.0.service', { defaultValue: testimonials[0].service }),
+    },
+    {
+      quote: t('testimonials.items.1.quote', { defaultValue: testimonials[1].quote }),
+      author: t('testimonials.items.1.author', { defaultValue: testimonials[1].author }),
+      rating: 5,
+      service: t('testimonials.items.1.service', { defaultValue: testimonials[1].service }),
+    },
+    {
+      quote: t('testimonials.items.2.quote', { defaultValue: testimonials[2].quote }),
+      author: t('testimonials.items.2.author', { defaultValue: testimonials[2].author }),
+      rating: 5,
+      service: t('testimonials.items.2.service', { defaultValue: testimonials[2].service }),
+    },
+    {
+      quote: t('testimonials.items.3.quote', { defaultValue: testimonials[3].quote }),
+      author: t('testimonials.items.3.author', { defaultValue: testimonials[3].author }),
+      rating: 5,
+      service: t('testimonials.items.3.service', { defaultValue: testimonials[3].service }),
+    },
+    {
+      quote: t('testimonials.items.4.quote', { defaultValue: testimonials[4].quote }),
+      author: t('testimonials.items.4.author', { defaultValue: testimonials[4].author }),
+      rating: 5,
+      service: t('testimonials.items.4.service', { defaultValue: testimonials[4].service }),
+    },
+  ];
 
   // Auto-play carousel
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
+      setActiveIndex((prev) => (prev + 1) % testimonialsList.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -78,20 +113,20 @@ export function Testimonials() {
       {/* Section Header */}
       <div className="flex flex-col items-center justify-center text-center mb-20">
         <p className="font-sans text-xs tracking-[0.4em] uppercase text-primary mb-4 border-b border-primary/20 pb-4 w-max">
-          Social Proof
+          {t('testimonials.eyebrow')}
         </p>
         <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight mb-4">
-          TESTI<span className="italic font-light text-primary">MONIOS</span>
+          {t('testimonials.title1')}<span className="italic font-light text-primary">{t('testimonials.title2')}</span>
         </h2>
         <p className="font-sans text-muted-foreground max-w-lg text-sm md:text-base leading-relaxed">
-          Lo que dicen nuestros clientes. Cada review es un testimonio de nuestra obsesión por la excelencia.
+          {t('testimonials.desc')}
         </p>
       </div>
 
       {/* Fade-based Carousel */}
       <div className="max-w-3xl mx-auto relative">
         <div className="relative min-h-[320px] md:min-h-[280px]">
-          {testimonials.map((t, idx) => (
+          {testimonialsList.map((t, idx) => (
             <div
               key={idx}
               className={`absolute inset-0 flex flex-col items-center text-center transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
@@ -125,7 +160,7 @@ export function Testimonials() {
 
         {/* Navigation Dots */}
         <div className="flex justify-center gap-3 mt-12">
-          {testimonials.map((_, idx) => (
+          {testimonialsList.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setActiveIndex(idx)}
@@ -141,14 +176,14 @@ export function Testimonials() {
 
         {/* Prev/Next Arrows */}
         <button
-          onClick={() => setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
+          onClick={() => setActiveIndex((prev) => (prev - 1 + testimonialsList.length) % testimonialsList.length)}
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-16 w-10 h-10 md:w-12 md:h-12 rounded-full border border-border/30 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300 text-muted-foreground backdrop-blur-sm"
           aria-label="Previous testimonial"
         >
           <ChevronLeft size={20} strokeWidth={1.5} />
         </button>
         <button
-          onClick={() => setActiveIndex((prev) => (prev + 1) % testimonials.length)}
+          onClick={() => setActiveIndex((prev) => (prev + 1) % testimonialsList.length)}
           className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-16 w-10 h-10 md:w-12 md:h-12 rounded-full border border-border/30 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300 text-muted-foreground backdrop-blur-sm"
           aria-label="Next testimonial"
         >

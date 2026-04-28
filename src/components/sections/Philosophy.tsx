@@ -2,10 +2,12 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function Philosophy() {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -73,22 +75,22 @@ export function Philosophy() {
 
   const timelineData = [
     {
-      title: "Precisión Quirúrgica",
-      desc: "Evitamos el temido 'blowout'. La línea fina real requiere un dominio maestro de la aguja y la anatomía humana.",
+      title: t('philosophy.items.0.title', { defaultValue: "Precisión Quirúrgica" }),
+      desc: t('philosophy.items.0.desc', { defaultValue: "Evitamos el temido 'blowout'. La línea fina real requiere un dominio maestro de la aguja y la anatomía humana." }),
       img: "/assets/images/tattoo_philosophy_1_1776270063317.png",
-      tag: "01 / DISEÑO"
+      tag: t('philosophy.items.0.tag', { defaultValue: "01 / DISEÑO" })
     },
     {
-      title: "Contraste Puro",
-      desc: "Negros absolutos que se difuminan con maestría en los espacios negativos, creando dimensión nativa en la piel.",
+      title: t('philosophy.items.1.title', { defaultValue: "Contraste Puro" }),
+      desc: t('philosophy.items.1.desc', { defaultValue: "Negros absolutos que se difuminan con maestría en los espacios negativos, creando dimensión nativa en la piel." }),
       img: "/assets/images/tattoo_philosophy_2_1776270116935.png",
-      tag: "02 / SOMBRAS"
+      tag: t('philosophy.items.1.tag', { defaultValue: "02 / SOMBRAS" })
     },
     {
-      title: "Inmortalidad",
-      desc: "Diseños escalados anatómicamente para curar perfectamente y envejecer con gracia junto a tu cuerpo.",
+      title: t('philosophy.items.2.title', { defaultValue: "Inmortalidad" }),
+      desc: t('philosophy.items.2.desc', { defaultValue: "Diseños escalados anatómicamente para curar perfectamente y envejecer con gracia junto a tu cuerpo." }),
       img: "/assets/images/tattoo_philosophy_3_1776270132196.png",
-      tag: "03 / CURACIÓN"
+      tag: t('philosophy.items.2.tag', { defaultValue: "03 / CURACIÓN" })
     }
   ];
 
@@ -97,11 +99,11 @@ export function Philosophy() {
       
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center mb-20">
         <p className="font-sans text-xs tracking-[0.4em] uppercase text-primary mb-4 border-b border-primary/20 pb-4 w-max">
-          Nuestra Filosofía
+          {t('philosophy.eyebrow')}
         </p>
         <h2 className="font-serif text-5xl md:text-7xl leading-[0.85] uppercase drop-shadow-md">
-          El Dolor es <br /> 
-          <span className="italic font-light text-muted-foreground">Temporal.</span>
+          {t('philosophy.title1')} <br /> 
+          <span className="italic font-light text-muted-foreground">{t('philosophy.title2')}</span>
         </h2>
       </div>
 

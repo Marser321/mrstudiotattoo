@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -93,6 +94,7 @@ const piercingServices: PiercingService[] = [
  * ────────────────────────────────────────────────────────────── */
 
 export function Piercings() {
+  const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -160,21 +162,16 @@ export function Piercings() {
         ref={headingRef}
         className="flex flex-col items-center justify-center text-center mb-20"
       >
-        {/* Overline — DESIGN.md typography.scale.overline */}
         <p className="font-sans text-[0.6875rem] tracking-[0.12em] uppercase text-primary mb-5 border-b border-primary/20 pb-4 w-max">
-          Body Jewelry
+          {t('piercings.eyebrow')}
         </p>
 
-        {/* Display heading — Playfair Display, per DESIGN.md §3 */}
         <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight mb-5">
-          PIERC<span className="italic font-light text-primary">INGS</span>
+          {t('piercings.title1')}<span className="italic font-light text-primary">{t('piercings.title2')}</span>
         </h2>
 
-        {/* Subtitle — DM Sans, --foreground-secondary */}
         <p className="font-sans text-muted-foreground max-w-xl text-sm md:text-base leading-relaxed">
-          Joyería corporal de alta gama. Cada perforación es ejecutada con
-          precisión clínica y materiales de grado implante, porque tu cuerpo
-          merece lo mismo que una pieza de alta joyería.
+          {t('piercings.desc')}
         </p>
       </div>
 
@@ -210,7 +207,7 @@ export function Piercings() {
                               border border-white/10"
                 style={{ borderRadius: '0.375rem' }}
               >
-                {service.tag}
+                {t(`piercings.services.${service.id}.tag`, { defaultValue: service.tag })}
               </span>
             </div>
 
@@ -218,24 +215,24 @@ export function Piercings() {
             <div className="flex flex-col flex-1 p-8">
               {/* Service subtitle — overline style */}
               <span className="font-sans text-[0.625rem] tracking-[0.15em] uppercase text-muted-foreground mb-2">
-                {service.subtitle}
+                {t(`piercings.services.${service.id}.subtitle`, { defaultValue: service.subtitle })}
               </span>
 
               {/* Service title — DM Serif Display per DESIGN.md heading.family */}
               <h3 className="font-serif text-2xl md:text-[1.75rem] mb-3 text-foreground group-hover:text-foreground transition-colors duration-300">
-                {service.title}
+                {t(`piercings.services.${service.id}.title`, { defaultValue: service.title })}
               </h3>
 
               {/* Description — DM Sans body, muted */}
               <p className="font-sans text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
-                {service.description}
+                {t(`piercings.services.${service.id}.desc`, { defaultValue: service.description })}
               </p>
 
               {/* ── Footer: Price + CTA ── */}
               <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/20">
                 {/* Price — mono font per DESIGN.md */}
                 <span className="font-mono text-sm text-muted-foreground tracking-wide">
-                  {service.price}
+                  {t(`piercings.services.${service.id}.price`, { defaultValue: service.price })}
                 </span>
 
                 {/* CTA Button — Red accent ONLY here, per DESIGN.md §2 "The Red Rule" */}
@@ -248,7 +245,7 @@ export function Piercings() {
                              focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:outline-none"
                   style={{ borderRadius: '0.375rem' }}
                 >
-                  Reservar
+                  {t('piercings.btnSmall')}
                 </button>
               </div>
             </div>
@@ -266,9 +263,8 @@ export function Piercings() {
       {/* ─── Bottom CTA Block ─── */}
       <div className="max-w-3xl mx-auto mt-24 text-center">
         <p className="font-sans text-muted-foreground text-sm md:text-base leading-relaxed mb-8">
-          ¿No encuentras lo que buscas? Realizamos piercings en{' '}
-          <span className="text-foreground">cualquier zona</span> del cuerpo con
-          joyería de titanio, oro y niobio de grado implante.
+          {t('piercings.bottom1')}
+          <span className="text-foreground">{t('piercings.bottom2')}</span>{t('piercings.bottom3')}
         </p>
         <button
           onClick={() => navigate('/booking')}
@@ -280,7 +276,7 @@ export function Piercings() {
                      focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:outline-none"
           style={{ borderRadius: '9999px' }}
         >
-          Agenda Tu Cita
+          {t('piercings.btnBook')}
         </button>
       </div>
     </section>

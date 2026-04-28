@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,7 +23,7 @@ const teamArtists = [
     specialties: ['Realismo', 'Black & Grey'],
     experience: '8+ años',
     bio: 'Especialista en realismo y sombras. Transforma fotografías y conceptos complejos en obras de arte inmortales sobre la piel.',
-    img: '', // placeholder
+    img: '/assets/artists/ramses.jpeg',
     instagram: '@ramses',
   },
   {
@@ -31,7 +32,7 @@ const teamArtists = [
     specialties: ['Neo-Tradicional', 'Color'],
     experience: '6+ años',
     bio: 'Maestro del color y las líneas sólidas. Su estilo neo-tradicional destaca por su vibrante paleta y composición impecable.',
-    img: '', // placeholder
+    img: '/assets/artists/misael.jpeg',
     instagram: '@misael.inc',
   },
   {
@@ -40,7 +41,7 @@ const teamArtists = [
     specialties: ['Geométrico', 'Custom', 'Mandalas'],
     experience: '7+ años',
     bio: 'Visión creativa sin límites. Transforma ideas abstractas en arte permanente con precisión matemática.',
-    img: '/assets/images/tattoo_portfolio_3_1776269971624.png',
+    img: '/assets/artists/tony.jpeg',
     instagram: '@tony.ink',
   },
   {
@@ -49,7 +50,7 @@ const teamArtists = [
     specialties: ['Fine Line', 'Minimalista'],
     experience: '5+ años',
     bio: 'Delicadeza y precisión milimétrica. Especialista en trazos ultra finos y diseños minimalistas que curan a la perfección.',
-    img: '', // placeholder
+    img: '/assets/artists/khris.jpeg',
     instagram: '@khris',
   },
   {
@@ -58,7 +59,7 @@ const teamArtists = [
     specialties: ['Blackwork', 'Ornamental'],
     experience: '6+ años',
     bio: 'Creador de piezas ornamentales y blackwork con un alto contraste y patrones únicos que se adaptan a la anatomía.',
-    img: '', // placeholder
+    img: '/assets/artists/alejandro.jpeg',
     instagram: '@alejandro',
   },
   {
@@ -67,12 +68,13 @@ const teamArtists = [
     specialties: ['Acuarela', 'Floral'],
     experience: '4+ años',
     bio: 'Especialista en tatuajes florales y técnicas de acuarela. Sus diseños destacan por su fluidez y tonos etéreos.',
-    img: '', // placeholder
+    img: '/assets/artists/alinette.jpeg',
     instagram: '@alinette',
   },
 ];
 
 export function Artists() {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -126,21 +128,21 @@ export function Artists() {
       {/* Section Header */}
       <div className="flex flex-col items-center justify-center text-center mb-24">
         <p className="font-sans text-xs tracking-[0.4em] uppercase text-primary mb-4 border-b border-primary/20 pb-4 w-max">
-          El Equipo
+          {t('artists.eyebrow')}
         </p>
         <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight mb-4">
-          ARTIS<span className="italic font-light text-primary">TAS</span>
+          {t('artists.title1')}<span className="italic font-light text-primary">{t('artists.title2')}</span>
         </h2>
         <p className="font-sans text-muted-foreground max-w-lg text-sm md:text-base leading-relaxed">
-          El equipo detrás de la magia. Artistas certificados que combinan técnica impecable con visión artística sin límites.
+          {t('artists.desc')}
         </p>
       </div>
 
       <div className="max-w-7xl mx-auto flex flex-col gap-12">
-        {/* CEO Featured Card */}
+        {/* CEO Featured Card (Temporarily Hidden) */}
         <div
           ref={el => { cardsRef.current[0] = el }}
-          className="group relative luxury-glass border border-border/30 overflow-hidden hover:border-primary/20 transition-all duration-700 flex flex-col lg:flex-row"
+          className="hidden group relative luxury-glass border border-border/30 overflow-hidden hover:border-primary/20 transition-all duration-700 flex flex-col lg:flex-row"
           style={{ perspective: '1000px' }}
         >
           {/* Image */}
@@ -154,7 +156,7 @@ export function Artists() {
               />
             ) : (
               <div className="w-full h-full bg-zinc-900/50 flex items-center justify-center">
-                <span className="text-muted-foreground text-xs uppercase tracking-widest">Retrato Pendiente</span>
+                <span className="text-muted-foreground text-xs uppercase tracking-widest">{t('artists.pending')}</span>
               </div>
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-black/20 lg:to-black/90"></div>
@@ -163,9 +165,9 @@ export function Artists() {
           {/* Content */}
           <div className="w-full lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center bg-black/40">
             <h3 className="font-serif text-4xl lg:text-5xl text-white mb-2">{ceo.name}</h3>
-            <p className="font-sans text-xs tracking-[0.2em] uppercase text-primary mb-8">{ceo.role}</p>
+            <p className="font-sans text-xs tracking-[0.2em] uppercase text-primary mb-8">{t('artists.ceo.role', { defaultValue: ceo.role })}</p>
             
-            <p className="font-sans text-base text-muted-foreground leading-relaxed mb-8">{ceo.bio}</p>
+            <p className="font-sans text-base text-muted-foreground leading-relaxed mb-8">{t('artists.ceo.bio', { defaultValue: ceo.bio })}</p>
             
             <div className="flex flex-wrap gap-2 mb-8">
               {ceo.specialties.map((spec) => (
@@ -180,7 +182,7 @@ export function Artists() {
 
             <div className="flex items-center justify-between pt-6 border-t border-border/20 mt-auto">
               <span className="font-sans text-sm text-muted-foreground">
-                <span className="text-primary font-medium">{ceo.experience}</span> de experiencia
+                <span className="text-primary font-medium">{ceo.experience}</span> {t('artists.exp')}
               </span>
               <a
                 href="#"
@@ -213,19 +215,23 @@ export function Artists() {
                   />
                 ) : (
                   <div className="w-full h-full bg-zinc-900/40 flex items-center justify-center">
-                    <span className="text-muted-foreground text-[10px] uppercase tracking-widest">Retrato Pendiente</span>
+                    <span className="text-muted-foreground text-[10px] uppercase tracking-widest">{t('artists.pending')}</span>
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
                 
                 <div className="absolute bottom-0 left-0 w-full p-6">
                   <h3 className="font-serif text-2xl md:text-3xl text-white mb-1">{artist.name}</h3>
-                  <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-primary">{artist.role}</p>
+                  <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-primary">
+                    {t(`artists.team.${artist.name.toLowerCase().split(' ')[0].replace(/[^a-z]/g, '')}.role`, { defaultValue: artist.role })}
+                  </p>
                 </div>
               </div>
 
               <div className="p-6 flex flex-col flex-grow">
-                <p className="font-sans text-xs text-muted-foreground leading-relaxed mb-6 flex-grow">{artist.bio}</p>
+                <p className="font-sans text-xs text-muted-foreground leading-relaxed mb-6 flex-grow">
+                  {t(`artists.team.${artist.name.toLowerCase().split(' ')[0].replace(/[^a-z]/g, '')}.bio`, { defaultValue: artist.bio })}
+                </p>
                 
                 <div className="flex flex-wrap gap-1.5 mb-6">
                   {artist.specialties.map((spec) => (

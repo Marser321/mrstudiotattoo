@@ -3,11 +3,18 @@ import { X } from "lucide-react"
 import { useTheme } from "../theme-provider"
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
+import { useTranslation } from "react-i18next"
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
+  const { t, i18n } = useTranslation()
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language.startsWith('es') ? 'en' : 'es';
+    i18n.changeLanguage(newLang);
+  }
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -52,18 +59,23 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-3">
             <img src="/assets/logo.png" alt="Mr Studio Tattoo Logo" className="h-8 w-auto object-contain" />
-            <span className="font-serif text-xl tracking-widest uppercase font-bold text-foreground hidden sm:inline-block">
-              Mr. <span className="text-primary italic">Tato</span>
+            <span className="font-sans text-sm tracking-[0.25em] uppercase font-bold text-foreground hidden sm:inline-block">
+              MR STUDIO TATTOO
             </span>
           </Link>
         </div>
         
         <nav className="hidden md:flex gap-8 font-sans text-xs tracking-[0.2em] uppercase items-center">
-          <Link to="/#services" className="hover:text-primary transition-colors">Services</Link>
-          <Link to="/#portfolio" className="hover:text-primary transition-colors">Portfolio</Link>
-          <Link to="/#philosophy" className="hover:text-primary transition-colors">Philosophy</Link>
-          <Link to="/booking" className="hover:text-primary transition-colors px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-sm">Contact</Link>
+          <Link to="/booking" className="hover:text-primary transition-colors px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-sm">{t('navbar.bookAppointment')}</Link>
           
+          <button
+            onClick={toggleLanguage}
+            className="ml-4 font-sans text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors"
+            aria-label="Toggle language"
+          >
+            {i18n.language.startsWith('es') ? 'ES' : 'EN'}
+          </button>
+
           <button
             onClick={handleToggle}
             className="ml-4 p-2.5 rounded-full border border-border hover:border-foreground/30 magnetic-element flex items-center justify-center transition-all duration-500"
@@ -113,34 +125,19 @@ export function Navbar() {
         </div>
         
         <nav className="flex-1 flex flex-col justify-center items-center gap-8 font-serif text-3xl tracking-widest uppercase">
-          <Link 
-            to="/#services" 
-            onClick={() => setIsMobileMenuOpen(false)}
+          <button
+            onClick={toggleLanguage}
             className="hover:text-primary transition-all hover:scale-105 hover:tracking-[0.25em]"
           >
-            Services
-          </Link>
-          <Link 
-            to="/#portfolio" 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="hover:text-primary transition-all hover:scale-105 hover:tracking-[0.25em]"
-          >
-            Portfolio
-          </Link>
-          <Link 
-            to="/#philosophy" 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="hover:text-primary transition-all hover:scale-105 hover:tracking-[0.25em]"
-          >
-            Philosophy
-          </Link>
+            {i18n.language.startsWith('es') ? 'Español' : 'English'}
+          </button>
           <div className="w-12 h-px bg-white/20 my-4"></div>
           <Link 
             to="/booking" 
             onClick={() => setIsMobileMenuOpen(false)}
             className="font-sans text-sm tracking-[0.2em] border border-primary text-primary px-8 py-3 rounded-sm hover:bg-primary hover:text-primary-foreground transition-colors"
           >
-            Book Appointment
+            {t('navbar.bookAppointment')}
           </Link>
         </nav>
       </div>

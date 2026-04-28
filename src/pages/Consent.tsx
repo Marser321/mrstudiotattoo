@@ -2,8 +2,10 @@ import { Navbar } from '../components/layout/Navbar'
 import { Footer } from '../components/layout/Footer'
 import { ConsentWizard } from '../components/consent/ConsentWizard'
 import { InkBackground } from '../components/ui/InkBackground'
+import { useTranslation } from 'react-i18next'
 
 export function Consent() {
+  const { t } = useTranslation();
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden font-sans antialiased selection:bg-primary/30 transition-colors duration-500">
       <InkBackground />
@@ -18,13 +20,13 @@ export function Consent() {
         {/* Page Header */}
         <div className="px-6 mb-16 sm:mb-20 text-center max-w-2xl mx-auto">
           <p className="font-sans text-[0.6875rem] tracking-[0.12em] uppercase text-primary mb-5 animate-in fade-in slide-in-from-top-4 duration-1000">
-            Consentimiento Informado
+            {t('consent.eyebrow')}
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-tighter mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            CON<span className="italic font-light text-primary">SENT</span>
+            {t('consent.title1')}<span className="italic font-light text-primary">{t('consent.title2')}</span>
           </h1>
           <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-lg mx-auto">
-            Completa tu formulario de consentimiento de forma digital. Rápido, seguro y sin papel.
+            {t('consent.desc')}
           </p>
         </div>
 

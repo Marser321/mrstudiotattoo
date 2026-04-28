@@ -4,8 +4,10 @@ import { Footer } from '../components/layout/Footer';
 import { IntakeForm } from '../components/booking/simple/IntakeForm';
 import { Toaster } from 'sonner';
 import { InkBackground } from '../components/ui/InkBackground';
+import { useTranslation } from 'react-i18next';
 
 export function BookingSimple() {
+  const { t } = useTranslation();
   return (
     <div className="relative min-h-screen bg-background text-foreground selection:bg-red-600/30 font-sans antialiased overflow-x-hidden transition-colors duration-500">
       <Toaster position="top-center" theme="dark" closeButton />
@@ -17,12 +19,13 @@ export function BookingSimple() {
         {/* HERO SECTION: SHORTER & IMPACTFUL */}
         <section className="relative h-[45vh] flex items-center justify-center overflow-hidden border-b border-border">
           {/* Video Background with High Contrast Noir Filters */}
-          <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 z-0 bg-zinc-950">
             <video 
               autoPlay 
               muted 
               loop 
-              playsInline 
+              playsInline
+              preload="metadata"
               className="w-full h-full object-cover grayscale brightness-[0.25] contrast-[1.2]"
             >
               <source src="/assets/mr-studio-tattoo/videos/hero-bg.mov" type="video/quicktime" />
@@ -34,13 +37,13 @@ export function BookingSimple() {
           {/* Hero Content */}
           <div className="relative z-10 text-center px-6 max-w-5xl mx-auto mt-16">
             <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-primary mb-4 font-bold">
-              Fast Track Booking
+              {t('booking.fastTrack')}
             </p>
             <h1 className="font-serif text-5xl md:text-7xl tracking-[0.05em] leading-[0.9] mb-4">
-              RESERVA TU <span className="italic font-light text-primary">CONSULTA</span>
+              {t('booking.simpleTitle1')} <span className="italic font-light text-primary">{t('booking.simpleTitle2')}</span>
             </h1>
             <p className="font-sans text-[9px] text-muted-foreground uppercase tracking-[0.3em] font-light">
-              Mínima fricción. Máximo realismo.
+              {t('booking.simpleDesc')}
             </p>
           </div>
         </section>
@@ -56,18 +59,18 @@ export function BookingSimple() {
               <div className="lg:sticky lg:top-32 space-y-8">
                 <div>
                   <p className="font-sans text-xs text-muted-foreground leading-relaxed uppercase tracking-[0.2em] mb-12">
-                    Tu información será procesada de forma prioritaria para coordinar tu próxima pieza de colección.
+                    {t('booking.simpleInfo')}
                   </p>
                 </div>
                 
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-4 text-muted-foreground">
                     <div className="w-10 h-[1px] bg-red-600" />
-                    <span className="text-[10px] tracking-widest uppercase font-bold">Respuesta en menos de 24h</span>
+                    <span className="text-[10px] tracking-widest uppercase font-bold">{t('booking.response24h')}</span>
                   </div>
                   <div className="flex items-center gap-4 text-muted-foreground">
                     <div className="w-10 h-[1px] bg-red-600" />
-                    <span className="text-[10px] tracking-widest uppercase font-bold">Conexión directa con artistas</span>
+                    <span className="text-[10px] tracking-widest uppercase font-bold">{t('booking.directConnection')}</span>
                   </div>
                 </div>
               </div>

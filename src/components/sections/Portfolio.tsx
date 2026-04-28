@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function Portfolio() {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLElement>(null);
   const itemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const navigate = useNavigate();
@@ -63,10 +65,10 @@ export function Portfolio() {
     <section ref={containerRef} className="relative w-full py-20 md:py-24 px-4 md:px-16 lg:px-32 bg-transparent overflow-hidden" id="portfolio">
       <div className="flex flex-col items-center justify-center text-center mb-16">
         <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight mb-4">
-          PORT<span className="italic font-light text-primary">FOLIO</span>
+          {t('portfolio.title1')}<span className="italic font-light text-primary">{t('portfolio.title2')}</span>
         </h2>
         <p className="font-sans text-muted-foreground max-w-lg text-sm md:text-base leading-relaxed">
-          Nuestras piezas son narrativas visuales grabadas en la piel. Explora nuestro archivo de obras maestras.
+          {t('portfolio.desc')}
         </p>
       </div>
 
@@ -85,7 +87,7 @@ export function Portfolio() {
               loading="lazy"
             />
             <div className="absolute inset-x-0 bottom-0 p-4 pb-6 bg-gradient-to-t from-black/80 to-transparent translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] flex flex-col justify-end z-10">
-               <span className="text-white font-sans text-xs uppercase tracking-widest">+ Agendar Diseño Similar</span>
+               <span className="text-white font-sans text-xs uppercase tracking-widest">{t('portfolio.bookSimilar')}</span>
             </div>
           </Link>
         ))}
@@ -94,15 +96,15 @@ export function Portfolio() {
       {/* "Needle Magic" section from T-art reference */}
       <div className="max-w-7xl mx-auto mt-32 flex flex-col md:flex-row items-center gap-16">
         <div className="w-full md:w-1/2 flex flex-col items-start text-left">
-          <h2 className="font-serif text-5xl md:text-6xl mb-6">Needle <span className="text-primary italic">Magic</span></h2>
+          <h2 className="font-serif text-5xl md:text-6xl mb-6">{t('portfolio.needleMagic.title1')}<span className="text-primary italic">{t('portfolio.needleMagic.title2')}</span></h2>
           <p className="text-muted-foreground font-sans text-sm mb-8 leading-relaxed">
-            Dedicamos años a perfeccionar cada pulso. Nuestro equipamiento de vanguardia asegura que cada trazo cure con una consistencia inquebrantable, superando los estándares clínicos.
+            {t('portfolio.needleMagic.desc')}
           </p>
           <button 
             onClick={() => navigate('/booking')}
             className="px-8 py-3 bg-primary text-primary-foreground font-sans text-xs tracking-widest uppercase rounded-full hover:bg-primary/80 transition-all duration-300 magnetic-element shadow-lg shadow-primary/20"
           >
-            Reservar Sesión
+            {t('portfolio.needleMagic.btn')}
           </button>
         </div>
         <div className="w-full md:w-1/2">
