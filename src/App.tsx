@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { FloatingBookingButton } from './components/booking/FloatingBookingButton'
+import { ScrollToTop } from './components/ScrollToTop'
 
 const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })))
 const Booking = lazy(() => import('./pages/Booking').then(module => ({ default: module.Booking })))
@@ -17,6 +18,7 @@ const PageLoader = () => (
 function App() {
   return (
     <>
+      <ScrollToTop />
       <div className="static-grain pointer-events-none" />
       <Suspense fallback={<PageLoader />}>
         <Routes>
